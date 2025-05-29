@@ -1,21 +1,21 @@
-package hashing;
+package project.chess;
 
-class Element
+class Element<K, V>
 {
-    private int key;
-    private String value;
+    private K key;
+    private V value;
     private boolean deleted;
 
-    public Element(int key, String value)
+    public Element(K key, V value)
     {
         this.key = key;
         this.value = value;
         this.deleted = false;
     }
 
-    public int Key() { return this.key; }
+    public K Key() { return this.key; }
 
-    public String Value() { return this.value; }
+    public V Value() { return this.value; }
 
     public boolean Deleted() { return this.deleted; }
 

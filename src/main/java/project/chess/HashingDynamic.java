@@ -1,6 +1,6 @@
-package hashing;
+package project.chess;
 
-public class HashingDynamic implements IHashDynamic
+public class HashingDynamic<K, V> implements IHashDynamic<K, V>
 {
     // Thresholds for resizing the hashtable
     private static final double LOAD_FACTOR_THRESHOLD = 0.75;
@@ -12,26 +12,21 @@ public class HashingDynamic implements IHashDynamic
     private int currentCapacity = INITIAL_SIZE;
 
     // Array of Element
-    private Element[] table = new Element[INITIAL_SIZE];
+    @SuppressWarnings("unchecked")
+    private Element<K, V>[] table = new Element[INITIAL_SIZE];
 
-    public static void main(String[] args)
+    public V[] asArray()
     {
-        HashingDynamic hashTable = new HashingDynamic();
-    }
+        @SuppressWarnings("unchecked")
+        V[] result = (V[]) new Object[size]; // not type-safe, but is common practice
 
-    public String[] asArray()
-    {
-        String[] result = new String[INITIAL_SIZE];
+        int index = 0;
 
-        for (int i = 0; i < INITIAL_SIZE; i++)
+        for (Element<K, V> element : table)
         {
-            if (table[i] != null && !table[i].Deleted())
+            if (element != null && !element.Deleted())
             {
-                result[i] = table[i].Value();
-            }
-            else
-            {
-                result[i] = null;
+                result[index++] = element.Value();
             }
         }
 
@@ -40,15 +35,17 @@ public class HashingDynamic implements IHashDynamic
 
     private void resize(int newCapacity)
     {
-        Element[] oldTable = table;
+        Element<K, V>[] oldTable = table;
         currentCapacity = newCapacity;
 
         // Reset the contents of the table
-        table = new Element[newCapacity];
+        @SuppressWarnings("unchecked")
+        Element<K, V>[] newTable = (Element<K, V>[]) new Element[newCapacity];
+        table = newTable;
         size = 0;
 
         // Copy all the elements into the new, bigger table
-        for (Element element : oldTable)
+        for (Element<K, V> element : oldTable)
         {
             if (element != null && !element.Deleted())
             {
@@ -58,19 +55,25 @@ public class HashingDynamic implements IHashDynamic
 
     }
 
-    public int hash(int key)
+    public int hash(K key)
     {
         double A = (Math.sqrt(5) - 1) / 2;      // Golden ratio constant
-        double result = key * A;                // Multiply key by A
+
+        int hashCode = key.hashCode();
+        int positiveHash = hashCode & 0x7FFFFFFF;
+
+        double result = positiveHash * A;                // Multiply key by A
+
         // Use fractional part and scale by table size
         return (int) (currentCapacity * (result - Math.floor(result)));
     }
 
     @Override
-    public void add(int Key, String Value)
+    public void add(K key, V value)
     {
-        // Validate the input value, and check if the value is null
-        if (Value == null) {
+        // Validate the input value and check if the value is null
+        if (value == null)
+        {
             throw new NullPointerException("Value cannot be null");
         }
 
@@ -81,52 +84,52 @@ public class HashingDynamic implements IHashDynamic
         }
 
         // Hash the key using the hash function
-        int hashedKey = hash(Key);
+        int hashedKey = hash(key);
 
         int originalHash = hashedKey;
 
         while (table[hashedKey] != null && !table[hashedKey].Deleted())
         {
-            // Check if key has already been added
-            if (Key == table[hashedKey].Key())
+            // Check if the key has already been added
+            if (key.equals(table[hashedKey].Key()))
             {
                 throw new IllegalArgumentException("Key already added");
             }
 
             // Linear search to find the next empty slot
-            hashedKey = (hashedKey + 1) % INITIAL_SIZE;
+            hashedKey = (hashedKey + 1) % currentCapacity;
 
-            // Checks if hashtable is full
+            // Checks if the hashtable is full
             if (hashedKey == originalHash)
             {
                 throw new UnsupportedOperationException("Hash table is full");
             }
         }
 
-        table[hashedKey] = new Element(Key, Value);
+        table[hashedKey] = new Element<K, V>(key, value);
         size++;
     }
 
     @Override
-    public String item(int Key)
+    public V item(K key)
     {
         // Hash the key using the hash function
-        int hashedKey = hash(Key);
+        int hashedKey = hash(key);
         int originalHash = hashedKey;
-        String output = null;
+        V output = null;
         boolean found = false;
 
         while (table[hashedKey] != null && !found)
         {
             // Check if the current location is empty
-            if (!table[hashedKey].Deleted() && table[hashedKey].Key() == Key)
+            if (!table[hashedKey].Deleted() && key.equals(table[hashedKey].Key()))
             {
                 output = table[hashedKey].Value();
                 found = true;
             }
             else
             {
-                hashedKey = (hashedKey + 1) % INITIAL_SIZE;
+                hashedKey = (hashedKey + 1) % currentCapacity;
 
                 // Stop if we have looped back to the start, hence the array is full
                 if (hashedKey == originalHash)
@@ -139,22 +142,22 @@ public class HashingDynamic implements IHashDynamic
         // If the key wasn't found after linear search
         if (!found)
         {
-            throw new IllegalArgumentException("Key not found: " + Key);
+            throw new IllegalArgumentException("Key not found: " + key);
         }
 
         return output;
     }
 
     @Override
-    public void delete(int Key)
+    public void delete(K key)
     {
         // Hash the key using the hash function
-        int hashedKey = hash(Key);
+        int hashedKey = hash(key);
         int originalHash = hashedKey;
 
         while (table[hashedKey] != null)
         {
-            if (!table[hashedKey].Deleted() && table[hashedKey].Key() == Key)
+            if (!table[hashedKey].Deleted() && key.equals(table[hashedKey].Key()))
             {
                 table[hashedKey].SetDeleted(true);
                 size--;
@@ -166,7 +169,7 @@ public class HashingDynamic implements IHashDynamic
                 return;
             }
 
-            hashedKey = (hashedKey + 1) % INITIAL_SIZE;
+            hashedKey = (hashedKey + 1) % currentCapacity;
 
             if (hashedKey == originalHash)
             {
@@ -174,24 +177,24 @@ public class HashingDynamic implements IHashDynamic
             }
         }
 
-        throw new IllegalArgumentException("Key not found: " + Key);
+        throw new IllegalArgumentException("Key not found: " + key);
     }
 
     @Override
-    public boolean contains(int Key)
+    public boolean contains(K key)
     {
         // Hash the key using the hash function
-        int hashedKey = hash(Key);
+        int hashedKey = hash(key);
         int originalHash = hashedKey;
 
         while (table[hashedKey] != null)
         {
-            if (!table[hashedKey].Deleted() && table[hashedKey].Key() == Key)
+            if (!table[hashedKey].Deleted() && table[hashedKey].Key() == key)
             {
                 return true;
             }
 
-            hashedKey = (hashedKey + 1) % INITIAL_SIZE;
+            hashedKey = (hashedKey + 1) % currentCapacity;
 
             if (hashedKey == originalHash)
             {

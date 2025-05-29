@@ -1,18 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package hashing;
+package project.chess;
 
-import java.lang.String;
-
-public interface IHashDynamic {
-    int hash(int key);
-    void add(int Key, String Value);
-    void delete(int Key);
-    String item(int Key);
-    boolean contains(int Key);
+public interface IHashDynamic<K, V>
+{
+    int hash(K key);
+    void add(K key, V value);
+    void delete(K key);
+    V item(K key);
+    boolean contains(K key);
     int length();
     boolean isEmpty();    
 }

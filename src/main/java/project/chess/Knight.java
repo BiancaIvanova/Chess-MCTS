@@ -34,9 +34,9 @@ public class Knight extends Piece
 
             if (!((rowDelta == 2 && colDelta == 1) || (rowDelta == 1 && colDelta == 2))) continue;
 
-            Piece targetPiece = board.getPiece(target);
+            Piece targetSquarePiece = board.getPiece(target);
 
-            if (targetPiece == null || targetPiece.getColour() != this.getColour())
+            if (targetSquarePiece == null || targetSquarePiece.getColour() != this.getColour())
             {
                 moves.add(target);
             }

@@ -20,12 +20,11 @@ public class Chessboard
 
     public void setPiece(int position, Piece piece)
     {
-        if (boardMap.contains(position))
+        if (piece == null)
         {
             boardMap.delete(position);
         }
-
-        if (piece != null)
+        else
         {
             boardMap.add(position, piece);
         }

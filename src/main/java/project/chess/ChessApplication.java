@@ -14,15 +14,16 @@ public class ChessApplication
 		SpringApplication.run(ChessApplication.class, args);
 
 		Chessboard board = new Chessboard();
-		Knight whiteKnight = new Knight(Piece.Colour.WHITE);
+		Knight blackKnight = new Knight(Piece.Colour.BLACK);
 		Rook blackRook = new Rook(Piece.Colour.BLACK);
 		Bishop blackBishop = new Bishop(Piece.Colour.BLACK);
-		int position = 0;
+		Queen blackQueen = new Queen(Piece.Colour.BLACK);
+		int position = 30;
 
-		board.setPiece(position, blackBishop);
-		board.setPiece(36, whiteKnight);
+		board.setPiece(position, blackQueen);
+		board.setPiece(29, blackKnight);
 
-		List<Integer> moves = blackBishop.generateMoves(position, board);
+		List<Integer> moves = blackQueen.generateMoves(position, board);
 
 		System.out.println("Moves from position " + position + ":");
 

@@ -20,7 +20,7 @@ public class Rook extends Piece
 
         for (int dir : directions)
         {
-            for (int target = position + dir; target >= 0 && target < 64; target+= dir)
+            for (int target = position + dir; target >= 0 && target < 64; target += dir)
             {
                 int targetCol = target % 8;
                 if ((dir == -1 && targetCol == 7) || (dir == 1 && targetCol == 0)) break;
@@ -40,7 +40,6 @@ public class Rook extends Piece
                     break;
                 }
             }
-
         }
 
         return moves;

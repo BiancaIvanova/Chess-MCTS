@@ -75,11 +75,12 @@ public abstract class Piece
 
     public Colour getColour() { return this.colour; }
 
-    public abstract char getNotationSymbol();
-
+    public abstract char toFENSymbol();
+    
+    public abstract String toAlgebraicNotation();
 
     public abstract List<Integer> generateMoves(int position, Chessboard board);
 
     @Override
-    public String toString() {return this.getNotationSymbol() + ""; }
+    public String toString() {return this.toFENSymbol() + ""; }
 }

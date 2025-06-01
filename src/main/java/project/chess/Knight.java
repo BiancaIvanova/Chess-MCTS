@@ -8,8 +8,15 @@ public class Knight extends Piece
     public Knight(Colour colour) { super(colour); }
 
     @Override
-    public char getNotationSymbol() {
-        return 'N';
+    public char toFENSymbol()
+    {
+        return (colour == Colour.WHITE) ? 'N' : 'n';
+    }
+
+    @Override
+    public String toAlgebraicNotation()
+    {
+        return "N";
     }
 
     @Override

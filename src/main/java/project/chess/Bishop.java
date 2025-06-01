@@ -8,8 +8,15 @@ public class Bishop extends Piece
     public Bishop(Colour colour) { super(colour); }
 
     @Override
-    public char getNotationSymbol() {
-        return 'B';
+    public char toFENSymbol()
+    {
+        return (colour == Colour.WHITE) ? 'B' : 'b';
+    }
+
+    @Override
+    public String toAlgebraicNotation()
+    {
+        return "B";
     }
 
     @Override

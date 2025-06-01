@@ -8,8 +8,15 @@ public class Rook extends Piece
     public Rook(Colour colour) { super(colour); }
 
     @Override
-    public char getNotationSymbol() {
-        return 'R';
+    public char toFENSymbol()
+    {
+        return (colour == Colour.WHITE) ? 'R' : 'r';
+    }
+
+    @Override
+    public String toAlgebraicNotation()
+    {
+        return "R";
     }
 
     @Override

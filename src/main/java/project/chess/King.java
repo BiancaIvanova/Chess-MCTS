@@ -10,8 +10,15 @@ public class King extends Piece
     public King(Colour colour) { super(colour); }
 
     @Override
-    public char getNotationSymbol() {
-        return 'K';
+    public char toFENSymbol()
+    {
+        return (colour == Colour.WHITE) ? 'K' : 'k';
+    }
+
+    @Override
+    public String toAlgebraicNotation()
+    {
+        return "K";
     }
 
     @Override

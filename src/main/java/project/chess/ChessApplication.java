@@ -18,12 +18,12 @@ public class ChessApplication
 		Rook blackRook = new Rook(Piece.Colour.BLACK);
 		Bishop blackBishop = new Bishop(Piece.Colour.BLACK);
 		Queen blackQueen = new Queen(Piece.Colour.BLACK);
-		int position = 30;
+		int position = 7;
 
-		board.setPiece(position, blackQueen);
-		board.setPiece(29, blackKnight);
+		board.setPiece(position, blackRook);
+		//board.setPiece(29, blackKnight);
 
-		List<Integer> moves = blackQueen.generateMoves(position, board);
+		List<Integer> moves = blackRook.generateMoves(position, board);
 
 		System.out.println("Moves from position " + position + ":");
 
@@ -32,5 +32,4 @@ public class ChessApplication
 			System.out.println(move);
 		}
 	}
-
 }

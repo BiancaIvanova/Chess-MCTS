@@ -37,17 +37,9 @@ public abstract class Piece
 
                 Piece targetPiece = board.getPiece(target);
 
-                if (targetPiece == null)
+                if (targetPiece == null || targetPiece.getColour() != this.getColour())
                 {
                     moves.add(target);
-                }
-                else
-                {
-                    if (targetPiece.getColour() != this.getColour())
-                    {
-                        moves.add(target); // Capturing an opponent piece
-                    }
-                    break; // Blocked by a friendly piece
                 }
             }
         }

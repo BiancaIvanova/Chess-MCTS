@@ -3,20 +3,21 @@ package project.chess;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Bishop extends Piece
+public class Queen extends Piece
 {
-    public Bishop(Colour colour) { super(colour); }
+    public Queen(Piece.Colour colour) { super(colour); }
 
     @Override
     public char getNotationSymbol() {
-        return 'B';
+        return 'Q';
     }
 
     @Override
     public List<Integer> generateMoves(int position, Chessboard board)
     {
         List<Integer> moves = new ArrayList<>();
-        int[] directions = {-9, -7, 7, 9};
+
+        int[] directions = {-9, -8, -7, -1, 1, 7, 8, 9};
 
         for (int dir : directions)
         {
@@ -36,9 +37,10 @@ public class Bishop extends Piece
                 {
                     int currentCol = target % 8;
 
-                    if (Math.abs(currentCol - prevCol) != 1)
+                    // Check if column jumped more than one step
+                    if (Math.abs(currentCol - prevCol) > 1)
                     {
-                        canContinue = false; // wrapped around edge
+                        canContinue = false;
                     }
                     else
                     {
@@ -54,10 +56,11 @@ public class Bishop extends Piece
                             {
                                 moves.add(target); // capture
                             }
-                            canContinue = false; // blocked by piece
+                            canContinue = false;
                         }
                     }
                 }
+
             }
         }
 

@@ -15,52 +15,6 @@ public class Bishop extends Piece
     @Override
     public List<Integer> generateMoves(int position, Chessboard board)
     {
-        List<Integer> moves = new ArrayList<>();
-        int[] directions = {-9, -7, 7, 9};
-
-        for (int dir : directions)
-        {
-            int target = position;
-            boolean canContinue = true;
-
-            for (int step = 1; step < 8 && canContinue; step++)
-            {
-                int prevCol = target % 8;
-                target += dir;
-
-                if (target < 0 || target >= 64)
-                {
-                    canContinue = false; // off board
-                }
-                else
-                {
-                    int currentCol = target % 8;
-
-                    if (Math.abs(currentCol - prevCol) != 1)
-                    {
-                        canContinue = false; // wrapped around edge
-                    }
-                    else
-                    {
-                        Piece targetPiece = board.getPiece(target);
-
-                        if (targetPiece == null)
-                        {
-                            moves.add(target);
-                        }
-                        else
-                        {
-                            if (targetPiece.getColour() != this.getColour())
-                            {
-                                moves.add(target); // capture
-                            }
-                            canContinue = false; // blocked by piece
-                        }
-                    }
-                }
-            }
-        }
-
-        return moves;
+        return generateSlidingMoves(position, board, new int[]{-9, -7, 7, 9});
     }
 }

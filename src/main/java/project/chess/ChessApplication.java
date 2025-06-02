@@ -2,6 +2,7 @@ package project.chess;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import project.chess.pieces.*;
 
 import java.util.List;
 

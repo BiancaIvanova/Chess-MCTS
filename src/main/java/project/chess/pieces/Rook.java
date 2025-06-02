@@ -1,6 +1,7 @@
-package project.chess;
+package project.chess.pieces;
 
-import java.util.ArrayList;
+import project.chess.Chessboard;
+
 import java.util.List;
 
 public class Rook extends Piece

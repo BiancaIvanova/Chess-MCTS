@@ -1,4 +1,6 @@
-package project.chess;
+package project.chess.pieces;
+
+import project.chess.Chessboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +78,7 @@ public abstract class Piece
     public Colour getColour() { return this.colour; }
 
     public abstract char toFENSymbol();
-    
+
     public abstract String toAlgebraicNotation();
 
     public abstract List<Integer> generateMoves(int position, Chessboard board);

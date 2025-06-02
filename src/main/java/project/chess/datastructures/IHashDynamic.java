@@ -1,4 +1,4 @@
-package project.chess;
+package project.chess.datastructures;
 
 public interface IHashDynamic<K, V>
 {

@@ -1,5 +1,9 @@
 package project.chess;
 
+import project.chess.datastructures.HashingDynamic;
+import project.chess.datastructures.IHashDynamic;
+import project.chess.pieces.Piece;
+
 public class Chessboard
 {
     private IHashDynamic<Integer, Piece> boardMap;

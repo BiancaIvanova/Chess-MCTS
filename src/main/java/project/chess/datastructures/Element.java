@@ -1,4 +1,4 @@
-package project.chess;
+package project.chess.datastructures;
 
 class Element<K, V>
 {

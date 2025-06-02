@@ -1,4 +1,6 @@
-package project.chess;
+package project.chess.pieces;
+
+import project.chess.Chessboard;
 
 import java.util.ArrayList;
 import java.util.List;

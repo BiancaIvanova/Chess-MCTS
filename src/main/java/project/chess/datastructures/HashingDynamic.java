@@ -1,4 +1,4 @@
-package project.chess;
+package project.chess.datastructures;
 
 public class HashingDynamic<K, V> implements IHashDynamic<K, V>
 {

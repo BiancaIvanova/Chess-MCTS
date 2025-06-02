@@ -19,12 +19,15 @@ public class ChessApplication
 		Bishop blackBishop = new Bishop(Piece.Colour.BLACK);
 		Queen blackQueen = new Queen(Piece.Colour.BLACK);
 		King blackKing = new King(Piece.Colour.BLACK);
-		int position = 7;
+		Pawn whitePawn = new Pawn(Piece.Colour.WHITE);
+		Pawn blackPawn = new Pawn(Piece.Colour.BLACK);
 
-		board.setPiece(position, blackKing);
-		board.setPiece(6, blackRook);
+		int position = 18;
 
-		List<Integer> moves = blackKing.generateMoves(position, board);
+		board.setPiece(position, blackPawn);
+		board.setPiece(11, whiteKnight);
+
+		List<Integer> moves = blackPawn.generateMoves(position, board);
 
 		System.out.println("Moves from position " + position + ":");
 

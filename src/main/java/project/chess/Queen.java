@@ -8,8 +8,15 @@ public class Queen extends Piece
     public Queen(Piece.Colour colour) { super(colour); }
 
     @Override
-    public char getNotationSymbol() {
-        return 'Q';
+    public char toFENSymbol()
+    {
+        return (colour == Colour.WHITE) ? 'Q' : 'q';
+    }
+
+    @Override
+    public String toAlgebraicNotation()
+    {
+        return "Q";
     }
 
     @Override

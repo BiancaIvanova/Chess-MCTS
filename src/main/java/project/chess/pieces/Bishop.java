@@ -1,6 +1,7 @@
 package project.chess.pieces;
 
 import project.chess.Chessboard;
+import project.chess.PieceType;
 
 import java.util.List;
 
@@ -9,16 +10,7 @@ public class Bishop extends Piece
     public Bishop(Colour colour) { super(colour); }
 
     @Override
-    public char toFENSymbol()
-    {
-        return (colour == Colour.WHITE) ? 'B' : 'b';
-    }
-
-    @Override
-    public String toAlgebraicNotation()
-    {
-        return "B";
-    }
+    public PieceType getType() { return PieceType.BISHOP; }
 
     @Override
     public List<Integer> generateMoves(int position, Chessboard board)

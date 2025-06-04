@@ -1,6 +1,8 @@
 package project.chess.pieces;
 
 import project.chess.Chessboard;
+import project.chess.PieceFactory;
+import project.chess.PieceType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,8 @@ public abstract class Piece
     }
 
     protected final Colour colour;
+
+    public Piece(Colour colour) { this.colour = colour; }
 
     protected List<Integer> generateSlidingMoves(int position, Chessboard board, int[] directions)
     {
@@ -39,10 +43,19 @@ public abstract class Piece
 
                 Piece targetPiece = board.getPiece(target);
 
-                if (targetPiece == null || targetPiece.getColour() != this.getColour())
+                if (targetPiece == null)
                 {
                     moves.add(target);
                 }
+                else
+                {
+                    if (targetPiece.getColour() != this.getColour())
+                    {
+                        moves.add(target); // Capture
+                    }
+                    break;
+                }
+
             }
         }
 
@@ -73,15 +86,21 @@ public abstract class Piece
         return false;
     }
 
-    public Piece(Colour colour) { this.colour = colour; }
+    public abstract List<Integer> generateMoves(int position, Chessboard board);
 
     public Colour getColour() { return this.colour; }
 
-    public abstract char toFENSymbol();
+    public abstract PieceType getType();
 
-    public abstract String toAlgebraicNotation();
+    public char toFENSymbol()
+    {
+        return PieceFactory.toFENSymbol(this);
+    }
 
-    public abstract List<Integer> generateMoves(int position, Chessboard board);
+    public String toAlgebraicNotation()
+    {
+        return PieceFactory.toAlgebraicNotation(this);
+    };
 
     @Override
     public String toString() {return this.toFENSymbol() + ""; }

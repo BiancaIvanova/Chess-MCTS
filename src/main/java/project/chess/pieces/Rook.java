@@ -1,6 +1,7 @@
 package project.chess.pieces;
 
 import project.chess.Chessboard;
+import project.chess.PieceType;
 
 import java.util.List;
 
@@ -9,16 +10,7 @@ public class Rook extends Piece
     public Rook(Colour colour) { super(colour); }
 
     @Override
-    public char toFENSymbol()
-    {
-        return (colour == Colour.WHITE) ? 'R' : 'r';
-    }
-
-    @Override
-    public String toAlgebraicNotation()
-    {
-        return "R";
-    }
+    public PieceType getType() { return PieceType.ROOK; }
 
     @Override
     public List<Integer> generateMoves(int position, Chessboard board)

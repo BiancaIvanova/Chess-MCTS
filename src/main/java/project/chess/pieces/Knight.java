@@ -1,6 +1,6 @@
 package project.chess.pieces;
-
 import project.chess.Chessboard;
+import project.chess.PieceType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +10,7 @@ public class Knight extends Piece
     public Knight(Colour colour) { super(colour); }
 
     @Override
-    public char toFENSymbol()
-    {
-        return (colour == Colour.WHITE) ? 'N' : 'n';
-    }
-
-    @Override
-    public String toAlgebraicNotation()
-    {
-        return "N";
-    }
+    public PieceType getType() { return PieceType.KNIGHT; }
 
     @Override
     public List<Integer> generateMoves(int position, Chessboard board)

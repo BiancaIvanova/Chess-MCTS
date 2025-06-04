@@ -42,6 +42,7 @@ public class Chessboard
 
     public String toFEN()
     {
+        // TODO: implement piece placement FEN string
         return "";
     }
 
@@ -69,12 +70,10 @@ public class Chessboard
             else
             {
                 int position = (row * 8) + col;
-                Piece piece = new Bishop(Piece.Colour.BLACK); //pieceFromSymbol(c); TODO
+                Piece piece = PieceFactory.fromFENSymbol(c);
                 setPiece(position, piece);
                 col++;
             }
         }
-
-
     }
 }

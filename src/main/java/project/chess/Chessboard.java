@@ -1,7 +1,6 @@
 package project.chess;
 
-import project.chess.datastructures.HashingDynamic;
-import project.chess.datastructures.IHashDynamic;
+import project.chess.datastructures.*;
 import project.chess.pieces.Piece;
 
 import java.util.ArrayList;
@@ -146,9 +145,9 @@ public class Chessboard
         System.out.println("    a b c d e f g h");
     }
 
-    public List<String> generateAllLegalMovesSAN(Piece.Colour colour)
+    public List<Pair<String, Chessboard>> generateAllLegalMovesBoards(Piece.Colour colour)
     {
-        List<String> legalMovesSAN = new ArrayList<>();
+        List<Pair<String, Chessboard>> legalMovesBoards = new ArrayList<>();
 
         for (int originPos = 0; originPos < 64; originPos++)
         {
@@ -159,59 +158,72 @@ public class Chessboard
 
             for (int targetPos : targets)
             {
+                String sanMove;
+
                 boolean isCapture = isOccupied(targetPos) && getPiece(targetPos).getColour() != colour;
 
                 // Castling detection
                 if (piece.getType() == PieceType.KING && Math.abs(targetPos - originPos) == 2)
                 {
-                    if (targetPos > originPos)
-                    {
-                        legalMovesSAN.add("O-O"); // Kingside castling
-                    }
-                    else
-                    {
-                        legalMovesSAN.add("O-O-O"); // Queenside castling
-                    }
-                    continue;
-                }
-
-                String toSquare = posToAlgebraic(targetPos);
-                String pieceSymbol = PieceFactory.toAlgebraicNotation(piece);
-
-                String disambiguation = "";
-
-                if (piece.getType() != PieceType.PAWN)
-                {
-                    if (needsDisambiguation(originPos, targetPos, piece))
-                    {
-                        disambiguation = getDisambiguation(originPos, targetPos, piece);
-                    }
-                }
-
-                String move;
-
-                if (piece.getType() == PieceType.PAWN)
-                {
-                    if (isCapture)
-                    {
-                        char fromFileChar = (char) ('a' + (originPos % 8));
-                        move = fromFileChar + "x" + toSquare;
-                    }
-                    else
-                    {
-                        move = toSquare;
-                    }
-                    // TODO add promotion handling
+                    sanMove = (targetPos > originPos) ? "O-O" : "O-O-O";
                 }
                 else
                 {
-                    move = pieceSymbol + disambiguation + (isCapture ? "x" : "") + toSquare;
+                    String toSquare = posToAlgebraic(targetPos);
+                    String pieceSymbol = PieceFactory.toAlgebraicNotation(piece);
+
+                    String disambiguation = "";
+
+                    if (piece.getType() != PieceType.PAWN)
+                    {
+                        if (needsDisambiguation(originPos, targetPos, piece))
+                        {
+                            disambiguation = getDisambiguation(originPos, targetPos, piece);
+                        }
+                    }
+
+                    if (piece.getType() == PieceType.PAWN)
+                    {
+                        if (isCapture)
+                        {
+                            char fromFileChar = (char) ('a' + (originPos % 8));
+                            sanMove = fromFileChar + "x" + toSquare;
+                        }
+                        else
+                        {
+                            sanMove = toSquare;
+                        }
+                        // TODO add promotion handling
+                    }
+                    else
+                    {
+                        sanMove = pieceSymbol + disambiguation + (isCapture ? "x" : "") + toSquare;
+                    }
+
+                    // TODO add check or mate indicators
                 }
 
-                // TODO add check or mate indicators
+                Chessboard newBoard = new Chessboard();
+                newBoard.importFEN(this.toFEN());
 
-                legalMovesSAN.add(move);
+                // TODO implement applyMove
+                //newBoard.applyMove(originPos, targetPos);
+
+                legalMovesBoards.add(new Pair<>(sanMove, newBoard));
             }
+        }
+
+        return legalMovesBoards;
+    }
+
+    public List<String> generateAllLegalMovesSAN(Piece.Colour colour)
+    {
+        List<Pair<String, Chessboard>> legalMovesBoards = generateAllLegalMovesBoards(colour);
+        List<String> legalMovesSAN = new ArrayList<>();
+
+        for (Pair<String, Chessboard> pair : legalMovesBoards)
+        {
+            legalMovesSAN.add(pair.getKey());
         }
 
         return legalMovesSAN;
@@ -276,4 +288,3 @@ public class Chessboard
     }
 
 }
-;

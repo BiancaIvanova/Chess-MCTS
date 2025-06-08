@@ -59,44 +59,42 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>
     // Overloaded method that allows the user to reset to the default hash function
     public void setCustomHash() { this.customHash = false; }
 
-    public V[] asArray()
+    @Override
+    public V item(K key)
     {
-        @SuppressWarnings("unchecked")
-        V[] result = (V[]) new Object[size]; // not type-safe, but is common practice
+        // Hash the key using the hash function
+        int hashedKey = hash(key);
+        int originalHash = hashedKey;
+        V output = null;
+        boolean found = false;
 
-        int index = 0;
-
-        for (Element<K, V> element : table)
+        while (table[hashedKey] != null && !found)
         {
-            if (element != null && !element.Deleted())
+            // Check if the current location is empty
+            if (!table[hashedKey].Deleted() && key.equals(table[hashedKey].Key()))
             {
-                result[index++] = element.Value();
+                output = table[hashedKey].Value();
+                found = true;
+            }
+            else
+            {
+                hashedKey = (hashedKey + 1) % currentCapacity;
+
+                // Stop if we have looped back to the start, hence the array is full
+                if (hashedKey == originalHash)
+                {
+                    break;
+                }
             }
         }
 
-        return result;
-    }
-
-    private void resize(int newCapacity)
-    {
-        Element<K, V>[] oldTable = table;
-        currentCapacity = newCapacity;
-
-        // Reset the contents of the table
-        @SuppressWarnings("unchecked")
-        Element<K, V>[] newTable = (Element<K, V>[]) new Element[newCapacity];
-        table = newTable;
-        size = 0;
-
-        // Copy all the elements into the new, bigger table
-        for (Element<K, V> element : oldTable)
+        // If the key wasn't found after linear search
+        if (!found)
         {
-            if (element != null && !element.Deleted())
-            {
-                add(element.Key(), element.Value());
-            }
+            throw new IllegalArgumentException("Key not found: " + key);
         }
 
+        return output;
     }
 
     @Override
@@ -139,44 +137,6 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>
 
         table[hashedKey] = new Element<K, V>(key, value);
         size++;
-    }
-
-    @Override
-    public V item(K key)
-    {
-        // Hash the key using the hash function
-        int hashedKey = hash(key);
-        int originalHash = hashedKey;
-        V output = null;
-        boolean found = false;
-
-        while (table[hashedKey] != null && !found)
-        {
-            // Check if the current location is empty
-            if (!table[hashedKey].Deleted() && key.equals(table[hashedKey].Key()))
-            {
-                output = table[hashedKey].Value();
-                found = true;
-            }
-            else
-            {
-                hashedKey = (hashedKey + 1) % currentCapacity;
-
-                // Stop if we have looped back to the start, hence the array is full
-                if (hashedKey == originalHash)
-                {
-                    break;
-                }
-            }
-        }
-
-        // If the key wasn't found after linear search
-        if (!found)
-        {
-            throw new IllegalArgumentException("Key not found: " + key);
-        }
-
-        return output;
     }
 
     @Override
@@ -234,6 +194,46 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>
             }
         }
         return false;
+    }
+
+    public V[] asArray()
+    {
+        @SuppressWarnings("unchecked")
+        V[] result = (V[]) new Object[size]; // not type-safe, but is common practice
+
+        int index = 0;
+
+        for (Element<K, V> element : table)
+        {
+            if (element != null && !element.Deleted())
+            {
+                result[index++] = element.Value();
+            }
+        }
+
+        return result;
+    }
+
+    private void resize(int newCapacity)
+    {
+        Element<K, V>[] oldTable = table;
+        currentCapacity = newCapacity;
+
+        // Reset the contents of the table
+        @SuppressWarnings("unchecked")
+        Element<K, V>[] newTable = (Element<K, V>[]) new Element[newCapacity];
+        table = newTable;
+        size = 0;
+
+        // Copy all the elements into the new, bigger table
+        for (Element<K, V> element : oldTable)
+        {
+            if (element != null && !element.Deleted())
+            {
+                add(element.Key(), element.Value());
+            }
+        }
+
     }
 
     @Override

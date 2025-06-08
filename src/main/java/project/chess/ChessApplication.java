@@ -45,5 +45,9 @@ public class ChessApplication
 		board.setPiece(7, new Rook(Piece.Colour.WHITE));
 
 		System.out.println(board.toFEN());
+
+		System.out.println();
+
+		board.printBoard();
 	}
 }

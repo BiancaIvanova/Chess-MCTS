@@ -115,4 +115,32 @@ public class Chessboard
             }
         }
     }
+
+    public void printBoard()
+    {
+        System.out.println("  +-----------------+");
+
+        for (int row = 7; row >= 0; row--)
+        {
+            System.out.print((row + 1) + " |");
+
+            for (int col = 0; col < 8; col++)
+            {
+                int position = ( row * 8 ) + col;
+                Piece piece = getPiece(position);
+                char symbol = '.';
+
+                if (piece != null)
+                {
+                    symbol = PieceFactory.toFENSymbol(piece);
+                }
+
+                System.out.print(" " + symbol);
+            }
+            System.out.println(" |");
+        }
+
+        System.out.println("  +-----------------+");
+        System.out.println("    a b c d e f g h");
+    }
 }

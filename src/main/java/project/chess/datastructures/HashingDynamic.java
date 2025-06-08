@@ -23,6 +23,13 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>, Iterable<Elemen
     private Element<K, V>[] table = new Element[INITIAL_SIZE];
 
     // Hashes the key with the specified hash function
+
+    /**
+     * Hashes the key with the specified hash function.
+     *
+     * @param key The key to hash.
+     * @return A non-negative integer representing the hashed index within the current capacity.
+     */
     @Override
     public int hash(K key)
     {
@@ -46,7 +53,12 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>, Iterable<Elemen
         }
     }
 
-    // Allows user to specify their own hash function
+    /**
+     * Sets a custom hash function.
+     *
+     * @param hashFunction A function that maps keys of type {@code K} to hash codes.
+     * @throws IllegalArgumentException If {@code hashFunction} is {@code null}.
+     */
     public void setCustomHash(Function<K, Integer> hashFunction)
     {
         if (hashFunction == null)
@@ -57,9 +69,18 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>, Iterable<Elemen
         this.customHash = true;
     }
 
-    // Overloaded method that allows the user to reset to the default hash function
+    /**
+     * Overloaded method that resets the hash function to the default implementation.
+     */
     public void setCustomHash() { this.customHash = false; }
 
+    /**
+     * Returns the value found at a specific key.
+     *
+     * @param key The key whose associated value is to be returned.
+     * @return The value associated with the specified key.
+     * @throws IllegalArgumentException If the key is not found in the table.
+     */
     @Override
     public V item(K key)
     {
@@ -98,6 +119,15 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>, Iterable<Elemen
         return output;
     }
 
+    /**
+     * Adds a new item to the hashtable, and resizes if necessary.
+     *
+     * @param key The key associated with the value.
+     * @param value The value to be added to the table.
+     * @throws NullPointerException If the value passed is {@code null}.
+     * @throws IllegalArgumentException If the key already exists in the table.
+     * @throws UnsupportedOperationException If the table is full and cannot insert.
+     */
     @Override
     public void add(K key, V value)
     {
@@ -140,6 +170,12 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>, Iterable<Elemen
         size++;
     }
 
+    /**
+     * Deletes the requested item from the hashtable, and downsizes if necessary.
+     *
+     * @param key The key to be deleted.
+     * @throws IllegalArgumentException If the key is not found in the table.
+     */
     @Override
     public void delete(K key)
     {
@@ -172,6 +208,12 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>, Iterable<Elemen
         throw new IllegalArgumentException("Key not found: " + key);
     }
 
+    /**
+     * Verifies if the requested item is present in the hashtable.
+     *
+     * @param key The key to be located.
+     * @return A boolean value indicating whether the requested key is found in the hashtable.
+     */
     @Override
     public boolean contains(K key)
     {
@@ -197,7 +239,9 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>, Iterable<Elemen
         return false;
     }
 
-    // Returns an iterator of Element
+    /**
+     * Returns an iterator of Element
+     */
     @Override
     public Iterator<Element<K, V>> iterator()
     {
@@ -269,6 +313,11 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>, Iterable<Elemen
         return result;
     }
 
+    /**
+     * Copies over all the elements into a new size of hashtable.
+     *
+     * @param newCapacity The new capacity of the hashtable, as an integer representing the number of items.
+     */
     private void resize(int newCapacity)
     {
         Element<K, V>[] oldTable = table;

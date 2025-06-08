@@ -1,5 +1,7 @@
 package project.chess.datastructures;
 
+import java.util.function.Function;
+
 public class HashingDynamic<K, V> implements IHashDynamic<K, V>
 {
     // Thresholds for resizing the hashtable
@@ -11,9 +13,51 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>
     private int size = 0;
     private int currentCapacity = INITIAL_SIZE;
 
+    // Defines any custom hash functions used
+    private Function<K, Integer> customHashFunction = null;
+    private boolean customHash = false;
+
     // Array of Element
     @SuppressWarnings("unchecked")
     private Element<K, V>[] table = new Element[INITIAL_SIZE];
+
+    // Hashes the key with the specified hash function
+    @Override
+    public int hash(K key)
+    {
+        if (customHash)
+        {
+            // Use custom hash function if it has been set
+            return customHashFunction.apply(key) % currentCapacity;
+        }
+        else
+        {
+            // Else use the following default hash function
+            double A = (Math.sqrt(5) - 1) / 2;      // Golden ratio constant
+
+            int hashCode = key.hashCode();
+            int positiveHash = hashCode & 0x7FFFFFFF;
+
+            double result = positiveHash * A;                // Multiply key by A
+
+            // Use fractional part and scale by table size
+            return (int) (currentCapacity * (result - Math.floor(result)));
+        }
+    }
+
+    // Allows user to specify their own hash function
+    public void setCustomHash(Function<K, Integer> hashFunction)
+    {
+        if (hashFunction == null)
+        {
+            throw new IllegalArgumentException("Specified hash function cannot be null");
+        }
+        this.customHashFunction = hashFunction;
+        this.customHash = true;
+    }
+
+    // Overloaded method that allows the user to reset to the default hash function
+    public void setCustomHash() { this.customHash = false; }
 
     public V[] asArray()
     {
@@ -53,19 +97,6 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>
             }
         }
 
-    }
-
-    public int hash(K key)
-    {
-        double A = (Math.sqrt(5) - 1) / 2;      // Golden ratio constant
-
-        int hashCode = key.hashCode();
-        int positiveHash = hashCode & 0x7FFFFFFF;
-
-        double result = positiveHash * A;                // Multiply key by A
-
-        // Use fractional part and scale by table size
-        return (int) (currentCapacity * (result - Math.floor(result)));
     }
 
     @Override

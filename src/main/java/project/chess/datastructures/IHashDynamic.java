@@ -8,5 +8,5 @@ public interface IHashDynamic<K, V>
     V item(K key);
     boolean contains(K key);
     int length();
-    boolean isEmpty();    
+    boolean isEmpty();
 }

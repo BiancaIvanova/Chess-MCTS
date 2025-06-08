@@ -42,8 +42,47 @@ public class Chessboard
 
     public String toFEN()
     {
-        // TODO: implement piece placement FEN string
-        return "";
+        StringBuilder fen = new StringBuilder();
+
+        // Loop from row 7 to 0
+        for (int row = 7; row >= 0; row--)
+        {
+            int emptyCount = 0;
+
+            for (int col = 0; col < 8; col++)
+            {
+                int position = ( row * 8 ) + col;
+                Piece piece = getPiece(position);
+
+                if (piece == null)
+                {
+                    emptyCount++;
+                }
+                else
+                {
+                    if (emptyCount > 0)
+                    {
+                        fen.append(emptyCount);
+                        emptyCount = 0;
+                    }
+                    fen.append(PieceFactory.toFENSymbol(piece));
+                }
+            }
+
+            // If last squares in row are empty, add the count
+            if (emptyCount > 0)
+            {
+                fen.append(emptyCount);
+            }
+
+            // Separate ranks by '/' except after last rank
+            if (row > 0)
+            {
+                fen.append('/');
+            }
+        }
+
+        return fen.toString();
     }
 
     public void importFEN(String fen)

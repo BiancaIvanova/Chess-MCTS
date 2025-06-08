@@ -1,6 +1,6 @@
 package project.chess.datastructures;
 
-public interface IHashDynamic<K, V>
+public interface IHashDynamic<K, V> extends Iterable<Element<K, V>>
 {
     int hash(K key);
     V item(K key);
@@ -10,4 +10,5 @@ public interface IHashDynamic<K, V>
     V[] asArray();
     int length();
     boolean isEmpty();
+    Iterable<K> keys();
 }

@@ -1,8 +1,9 @@
 package project.chess.datastructures;
 
+import java.util.Iterator;
 import java.util.function.Function;
 
-public class HashingDynamic<K, V> implements IHashDynamic<K, V>
+public class HashingDynamic<K, V> implements IHashDynamic<K, V>, Iterable<Element<K, V>>
 {
     // Thresholds for resizing the hashtable
     private static final double LOAD_FACTOR_THRESHOLD = 0.75;
@@ -194,6 +195,60 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>
             }
         }
         return false;
+    }
+
+    // Returns an iterator of Element
+    @Override
+    public Iterator<Element<K, V>> iterator()
+    {
+        return new Iterator<Element<K, V>>()
+        {
+            private int index = 0;
+
+            @Override
+            public boolean hasNext()
+            {
+                while (index < currentCapacity && (table[index] == null || table[index].Deleted()))
+                {
+                    index++;
+                }
+                return index < currentCapacity;
+            }
+
+            @Override
+            public Element<K, V> next()
+            {
+                return table[index++];
+            }
+        };
+    }
+
+    @Override
+    public Iterable<K> keys()
+    {
+        // The boilerplate Iterator implementation was found here:
+        // https://www.geeksforgeeks.org/java-implementing-iterator-and-iterable-interface/
+        return new Iterable<K>() {
+            @Override
+            public Iterator<K> iterator() {
+                return new Iterator<K>() {
+                    private int index = 0;
+
+                    @Override
+                    public boolean hasNext() {
+                        while (index < currentCapacity && (table[index] == null || table[index].Deleted())) {
+                            index++;
+                        }
+                        return index < currentCapacity;
+                    }
+
+                    @Override
+                    public K next() {
+                        return table[index++].Key();
+                    }
+                };
+            }
+        };
     }
 
     public V[] asArray()

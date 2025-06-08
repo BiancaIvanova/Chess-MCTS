@@ -1,13 +1,7 @@
 package project.chess;
 
 import lombok.Getter;
-import project.chess.pieces.Piece;
-import project.chess.pieces.Knight;
-import project.chess.pieces.Bishop;
-import project.chess.pieces.Rook;
-import project.chess.pieces.Queen;
-import project.chess.pieces.Pawn;
-import project.chess.pieces.King;
+import project.chess.pieces.*;
 
 import java.util.function.Function;
 

@@ -2,8 +2,10 @@ package project.chess;
 
 import project.chess.datastructures.HashingDynamic;
 import project.chess.datastructures.IHashDynamic;
-import project.chess.pieces.Bishop;
 import project.chess.pieces.Piece;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Chessboard
 {
@@ -143,4 +145,135 @@ public class Chessboard
         System.out.println("  +-----------------+");
         System.out.println("    a b c d e f g h");
     }
+
+    public List<String> generateAllLegalMovesSAN(Piece.Colour colour)
+    {
+        List<String> legalMovesSAN = new ArrayList<>();
+
+        for (int originPos = 0; originPos < 64; originPos++)
+        {
+            Piece piece = getPiece(originPos);
+            if (piece == null || piece.getColour() != colour) continue;
+
+            List<Integer> targets = piece.generateMoves(originPos, this);
+
+            for (int targetPos : targets)
+            {
+                boolean isCapture = isOccupied(targetPos) && getPiece(targetPos).getColour() != colour;
+
+                // Castling detection
+                if (piece.getType() == PieceType.KING && Math.abs(targetPos - originPos) == 2)
+                {
+                    if (targetPos > originPos)
+                    {
+                        legalMovesSAN.add("O-O"); // Kingside castling
+                    }
+                    else
+                    {
+                        legalMovesSAN.add("O-O-O"); // Queenside castling
+                    }
+                    continue;
+                }
+
+                String toSquare = posToAlgebraic(targetPos);
+                String pieceSymbol = PieceFactory.toAlgebraicNotation(piece);
+
+                String disambiguation = "";
+
+                if (piece.getType() != PieceType.PAWN)
+                {
+                    if (needsDisambiguation(originPos, targetPos, piece))
+                    {
+                        disambiguation = getDisambiguation(originPos, targetPos, piece);
+                    }
+                }
+
+                String move;
+
+                if (piece.getType() == PieceType.PAWN)
+                {
+                    if (isCapture)
+                    {
+                        char fromFileChar = (char) ('a' + (originPos % 8));
+                        move = fromFileChar + "x" + toSquare;
+                    }
+                    else
+                    {
+                        move = toSquare;
+                    }
+                    // TODO add promotion handling
+                }
+                else
+                {
+                    move = pieceSymbol + disambiguation + (isCapture ? "x" : "") + toSquare;
+                }
+
+                // TODO add check or mate indicators
+
+                legalMovesSAN.add(move);
+            }
+        }
+
+        return legalMovesSAN;
+    }
+
+    public static String posToAlgebraic(int pos)
+    {
+        int file = pos % 8;
+        int rank = pos / 8;
+        char fileChar = (char) ('a' + (file));
+        char rankChar = (char) ('1' + (rank));
+        return "" + fileChar + rankChar;
+    }
+
+    private boolean needsDisambiguation(int originPos, int targetPos, Piece piece)
+    {
+        for (int pos = 0; pos < 64; pos++)
+        {
+            if (pos == originPos) continue;
+            Piece other = getPiece(pos);
+
+            if (other != null && other.getColour() == piece.getColour() && other.getType() == piece.getType())
+            {
+                List<Integer> otherMoves = other.generateMoves(pos, this);
+                if (otherMoves.contains(targetPos)) return true;
+            }
+        }
+        return false;
+    }
+
+    private String getDisambiguation(int originPos, int targetPos, Piece piece)
+    {
+        int originFile = originPos % 8;
+        int originRank = originPos / 8;
+
+        List<Integer> others = new ArrayList<>();
+
+        for (int pos = 0; pos < 64; pos++)
+        {
+            if (pos == originPos) continue;
+            Piece other = getPiece(pos);
+            if (other != null && other.getColour() == piece.getColour() && other.getType() == piece.getType())
+            {
+                others.add(pos);
+            }
+        }
+
+        if (others.isEmpty()) return "";
+
+        boolean sameFile = false;
+        boolean sameRank = false;
+
+        for (int pos : others)
+        {
+            if ((pos % 8) == originFile) sameFile = true;
+            if ((pos / 8) == originRank) sameRank = true;
+        }
+
+        if (!sameFile) return "" + (char)('a' + originFile);
+        if (!sameRank) return "" + (char)('1' + originRank);
+        return "" + (char)('a' + originFile) + (char)('1' + originRank);
+    }
+
 }
+;

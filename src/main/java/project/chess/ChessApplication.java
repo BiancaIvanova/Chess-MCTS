@@ -14,27 +14,36 @@ public class ChessApplication
 	{
 		SpringApplication.run(ChessApplication.class, args);
 
-		Chessboard board = new Chessboard();
-		Knight whiteKnight = new Knight(Piece.Colour.WHITE);
-		Rook blackRook = new Rook(Piece.Colour.BLACK);
-		Bishop blackBishop = new Bishop(Piece.Colour.BLACK);
-		Queen blackQueen = new Queen(Piece.Colour.BLACK);
-		King blackKing = new King(Piece.Colour.BLACK);
-		Pawn whitePawn = new Pawn(Piece.Colour.WHITE);
-		Pawn blackPawn = new Pawn(Piece.Colour.BLACK);
+		Chessboard board =  new Chessboard();
 
-		int position = 18;
+		board.setPiece(56, new Rook(Piece.Colour.BLACK));
+		board.setPiece(57, new Knight(Piece.Colour.BLACK));
+		board.setPiece(58, new Bishop(Piece.Colour.BLACK));
+		board.setPiece(59, new Queen(Piece.Colour.BLACK));
+		board.setPiece(60, new King(Piece.Colour.BLACK));
+		board.setPiece(61, new Bishop(Piece.Colour.BLACK));
+		board.setPiece(62, new Knight(Piece.Colour.BLACK));
+		board.setPiece(63, new Rook(Piece.Colour.BLACK));
 
-		board.setPiece(position, blackPawn);
-		board.setPiece(11, whiteKnight);
-
-		List<Integer> moves = blackPawn.generateMoves(position, board);
-
-		System.out.println("Moves from position " + position + ":");
-
-		for (int move : moves)
+		for (int i = 48; i <= 55; i++)
 		{
-			System.out.println(move);
+			board.setPiece(i, new Pawn(Piece.Colour.BLACK));
 		}
+
+		for (int i = 8; i <= 15; i++)
+		{
+			board.setPiece(i, new Pawn(Piece.Colour.WHITE));
+		}
+
+		board.setPiece(0, new Rook(Piece.Colour.WHITE));
+		board.setPiece(1, new Knight(Piece.Colour.WHITE));
+		board.setPiece(2, new Bishop(Piece.Colour.WHITE));
+		board.setPiece(3, new Queen(Piece.Colour.WHITE));
+		board.setPiece(4, new King(Piece.Colour.WHITE));
+		board.setPiece(5, new Bishop(Piece.Colour.WHITE));
+		board.setPiece(6, new Knight(Piece.Colour.WHITE));
+		board.setPiece(7, new Rook(Piece.Colour.WHITE));
+
+		System.out.println(board.toFEN());
 	}
 }

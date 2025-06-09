@@ -386,7 +386,7 @@ public class Chessboard
         return legalMovesSAN;
     }
 
-    public int findKingPosition(Piece.Colour colour)
+    public int getKingPosition(Piece.Colour colour)
     {
         return (colour == Piece.Colour.WHITE) ? whiteKingPosition : blackKingPosition;
     }
@@ -407,7 +407,7 @@ public class Chessboard
 
     public boolean isInCheck(Piece.Colour colour)
     {
-        int kingPos = findKingPosition(colour);
+        int kingPos = getKingPosition(colour);
         if (kingPos == -1) return true; // If the king is missing, treat it as check
 
         Piece.Colour opponent = (colour == Piece.Colour.WHITE) ? Piece.Colour.BLACK : Piece.Colour.WHITE;
@@ -473,7 +473,4 @@ public class Chessboard
         if (!sameRank) return "" + (char)('1' + originRank);
         return BoardUtils.toCoordinate(originPos);
     }
-
-    public boolean isSquareAttacked(int num, Piece.Colour colour) { return false; } // TODO TEMP DELETE ASAP
-
 }

@@ -450,6 +450,16 @@ public class Chessboard
         return false;
     }
 
+    public boolean isCheckmate(Piece.Colour colour)
+    {
+        return isInCheck(colour) && generateAllPseudolegalMoveBoards(colour).isEmpty();
+    }
+
+    public boolean isStalemate(Piece.Colour colour)
+    {
+        return !isInCheck(colour) && generateAllLegalMoveBoards(colour).isEmpty();
+    }
+
     private boolean needsDisambiguation(int originPos, int targetPos, Piece piece)
     {
         for (int pos = 0; pos < BOARD_SIZE; pos++)

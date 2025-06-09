@@ -8,6 +8,7 @@ import java.util.List;
 public class Rook extends Piece
 {
     public Rook(Colour colour) { super(colour); }
+    public Rook(Rook other) { super(other); }
 
     @Override
     public PieceType getType() { return PieceType.ROOK; }

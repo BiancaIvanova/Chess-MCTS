@@ -11,6 +11,7 @@ import static project.chess.Chessboard.BOARD_SIZE;
 public class Knight extends Piece
 {
     public Knight(Colour colour) { super(colour); }
+    public Knight(Knight other) { super(other); }
 
     @Override
     public PieceType getType() { return PieceType.KNIGHT; }

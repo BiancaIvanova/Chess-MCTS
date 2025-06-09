@@ -14,6 +14,7 @@ public class King extends Piece
     private static final int[] KING_DIRECTIONS = {-9, -8, -7, -1, 1, 7, 8, 9};
 
     public King(Colour colour) { super(colour); }
+    public King(King other) { super(other); }
 
     @Override
     public PieceType getType() { return PieceType.KING; }

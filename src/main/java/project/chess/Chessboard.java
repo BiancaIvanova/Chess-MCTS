@@ -26,6 +26,26 @@ public class Chessboard
         castlingRights = EnumSet.allOf(CastlingRight.class);
     }
 
+    // Copy constructor
+    public Chessboard(Chessboard other)
+    {
+        this.boardMap = new HashingDynamic<>();
+
+        for (int position = 0; position < BOARD_SIZE; position++)
+        {
+            Piece piece = other.getPiece(position);
+            if (piece != null)
+            {
+                this.boardMap.add(position, PieceFactory.copy(piece));
+            }
+        }
+
+        this.whiteKingPosition = other.whiteKingPosition;
+        this.blackKingPosition = other.blackKingPosition;
+
+        this.castlingRights = EnumSet.copyOf(other.castlingRights);
+    }
+
     public Piece getPiece(int position)
     {
         if (boardMap.contains(position))
@@ -114,7 +134,7 @@ public class Chessboard
     {
         Piece movingPiece = getPiece(from);
 
-        // Remove castling rights if necessary
+        // Remove castling rights if a king moves
         if (movingPiece.getType() == PieceType.KING)
         {
             if (movingPiece.getColour() == Piece.Colour.WHITE)
@@ -129,31 +149,36 @@ public class Chessboard
             }
         }
 
+        // Remove castling rights if a rook moves from or is captured on its original square
         if (movingPiece.getType() == PieceType.ROOK)
         {
-            // If rook moves from original position, revoke appropriate castling right
-            if (from == BoardUtils.toIndex(0, 0)) // a1
-                castlingRights.remove(CastlingRight.WHITE_QUEENSIDE);
-            else if (from == BoardUtils.toIndex(0, 7)) // h1
-                castlingRights.remove(CastlingRight.WHITE_KINGSIDE);
-            else if (from == BoardUtils.toIndex(7, 0)) // a8
-                castlingRights.remove(CastlingRight.BLACK_QUEENSIDE);
-            else if (from == BoardUtils.toIndex(7, 7)) // h8
-                castlingRights.remove(CastlingRight.BLACK_KINGSIDE);
+            removeCastlingRightsBySquare(from);
         }
 
-        // Remove castling rights if a rook is captured
         Piece capturedPiece = getPiece(to);
         if (capturedPiece != null && capturedPiece.getType() == PieceType.ROOK)
         {
-            if (to == BoardUtils.toIndex(0, 0)) // a1
-                castlingRights.remove(CastlingRight.WHITE_QUEENSIDE);
-            else if (to == BoardUtils.toIndex(0, 7)) // h1
-                castlingRights.remove(CastlingRight.WHITE_KINGSIDE);
-            else if (to == BoardUtils.toIndex(7, 0)) // a8
-                castlingRights.remove(CastlingRight.BLACK_QUEENSIDE);
-            else if (to == BoardUtils.toIndex(7, 7)) // h8
-                castlingRights.remove(CastlingRight.BLACK_KINGSIDE);
+            removeCastlingRightsBySquare(to);
+        }
+    }
+
+    private void removeCastlingRightsBySquare(int square)
+    {
+        if (square == BoardUtils.toIndex(0, 0))
+        {   // a1
+            castlingRights.remove(CastlingRight.WHITE_QUEENSIDE);
+        }
+        else if (square == BoardUtils.toIndex(0, 7))
+        {   // h1
+            castlingRights.remove(CastlingRight.WHITE_KINGSIDE);
+        }
+        else if (square == BoardUtils.toIndex(7, 0))
+        {   // a8
+            castlingRights.remove(CastlingRight.BLACK_QUEENSIDE);
+        }
+        else if (square == BoardUtils.toIndex(7, 7))
+        {   // h8
+            castlingRights.remove(CastlingRight.BLACK_KINGSIDE);
         }
     }
 
@@ -191,7 +216,7 @@ public class Chessboard
                 }
             }
 
-            // If last squares in row are empty, add the count
+            // If the last squares in row are empty, add the count
             if (emptyCount > 0)
             {
                 fen.append(emptyCount);
@@ -330,11 +355,8 @@ public class Chessboard
                     // TODO add check or mate indicators
                 }
 
-                Chessboard newBoard = new Chessboard();
-                newBoard.importFEN(this.toFEN());
-
+                Chessboard newBoard = new Chessboard(this);
                 newBoard.move(originPos, targetPos);
-
                 legalMovesBoards.add(new Pair<>(sanMove, newBoard));
             }
         }
@@ -342,7 +364,7 @@ public class Chessboard
         return legalMovesBoards;
     }
 
-    public List<String> generateAllPsuedolegalMoveSAN(Piece.Colour colour)
+    public List<String> generateAllPseudolegalMoveSAN(Piece.Colour colour)
     {
         List<Pair<String, Chessboard>> legalMovesBoards = generateAllPseudolegalMoveBoards(colour);
         List<String> legalMovesSAN = new ArrayList<>();
@@ -400,15 +422,18 @@ public class Chessboard
         {
             Piece piece = getPiece(position);
 
-            if (piece != null && piece.getType() == PieceType.KING) whiteKingPosition = position;
-            else blackKingPosition = position;
+            if (piece != null && piece.getType() == PieceType.KING)
+            {
+                if (piece.getColour() == Piece.Colour.WHITE) whiteKingPosition = position;
+                else if (piece.getColour() == Piece.Colour.BLACK) blackKingPosition = position;
+            }
         }
     }
 
     public boolean isInCheck(Piece.Colour colour)
     {
         int kingPos = getKingPosition(colour);
-        if (kingPos == -1) return true; // If the king is missing, treat it as check
+        if (kingPos == -1) return true; // If the king is missing, treat it as a check
 
         Piece.Colour opponent = (colour == Piece.Colour.WHITE) ? Piece.Colour.BLACK : Piece.Colour.WHITE;
 

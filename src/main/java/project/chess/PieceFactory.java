@@ -4,6 +4,13 @@ import project.chess.pieces.Piece;
 
 public class PieceFactory
 {
+    public static Piece copy(Piece piece)
+    {
+        if (piece == null) return null;
+        return piece.getType().create(piece.getColour());
+    }
+
+
     public static Piece fromFENSymbol(char c)
     {
         Piece.Colour colour = Character.isUpperCase(c) ? Piece.Colour.WHITE : Piece.Colour.BLACK;

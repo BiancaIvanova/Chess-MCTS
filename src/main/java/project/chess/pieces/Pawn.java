@@ -20,6 +20,7 @@ import java.util.List;
 public class Pawn extends Piece
 {
     public Pawn(Colour colour) { super(colour); }
+    public Pawn(Pawn other) { super(other); }
 
     @Override
     public PieceType getType() { return PieceType.PAWN; }

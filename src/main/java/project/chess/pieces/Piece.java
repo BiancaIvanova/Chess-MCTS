@@ -1,5 +1,6 @@
 package project.chess.pieces;
 
+import lombok.Getter;
 import project.chess.BoardUtils;
 import project.chess.Chessboard;
 import project.chess.PieceFactory;
@@ -11,6 +12,7 @@ import java.util.List;
 import static project.chess.Chessboard.BOARD_SIZE;
 import static project.chess.Chessboard.BOARD_WIDTH;
 
+@Getter
 public abstract class Piece
 {
     public enum Colour
@@ -22,6 +24,9 @@ public abstract class Piece
     protected final Colour colour;
 
     public Piece(Colour colour) { this.colour = colour; }
+
+    // Copy constructor
+    public Piece(Piece other) { this.colour = other.colour; }
 
     protected List<Integer> generateSlidingMoves(int position, Chessboard board, int[] directions)
     {
@@ -87,8 +92,6 @@ public abstract class Piece
     }
 
     public abstract List<Integer> generateMoves(int position, Chessboard board);
-
-    public Colour getColour() { return this.colour; }
 
     public abstract PieceType getType();
 

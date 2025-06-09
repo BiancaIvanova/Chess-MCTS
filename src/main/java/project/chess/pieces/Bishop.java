@@ -8,6 +8,7 @@ import java.util.List;
 public class Bishop extends Piece
 {
     public Bishop(Colour colour) { super(colour); }
+    public Bishop(Bishop other) { super(other); }
 
     @Override
     public PieceType getType() { return PieceType.BISHOP; }

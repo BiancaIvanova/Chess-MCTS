@@ -8,6 +8,7 @@ import java.util.List;
 public class Queen extends Piece
 {
     public Queen(Piece.Colour colour) { super(colour); }
+    public Queen(Queen other) { super(other); }
 
     @Override
     public PieceType getType() { return PieceType.QUEEN; }

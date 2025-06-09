@@ -25,7 +25,7 @@ public class ChessApplication
 
 //		// Generate all legal moves for white
 //		System.out.println("\nLegal moves for White:");
-//		List<String> whiteMoves = board.generateAllLegalMovesSAN(project.chess.pieces.Piece.Colour.WHITE);
+//		List<String> whiteMoves = board.generateAllPsuedolegalMoveSAN(project.chess.pieces.Piece.Colour.WHITE);
 //		for (String move : whiteMoves) {
 //			System.out.println(move);
 //		}

@@ -239,7 +239,7 @@ public class Chessboard
         System.out.println("    a b c d e f g h");
     }
 
-    public List<Pair<String, Chessboard>> generateAllLegalMovesBoards(Piece.Colour colour)
+    public List<Pair<String, Chessboard>> generateAllPseudolegalMoveBoards(Piece.Colour colour)
     {
         List<Pair<String, Chessboard>> legalMovesBoards = new ArrayList<>();
 
@@ -300,8 +300,7 @@ public class Chessboard
                 Chessboard newBoard = new Chessboard();
                 newBoard.importFEN(this.toFEN());
 
-                // TODO implement applyMove
-                //newBoard.applyMove(originPos, targetPos);
+                newBoard.move(originPos, targetPos);
 
                 legalMovesBoards.add(new Pair<>(sanMove, newBoard));
             }
@@ -310,9 +309,9 @@ public class Chessboard
         return legalMovesBoards;
     }
 
-    public List<String> generateAllLegalMovesSAN(Piece.Colour colour)
+    public List<String> generateAllPsuedolegalMoveSAN(Piece.Colour colour)
     {
-        List<Pair<String, Chessboard>> legalMovesBoards = generateAllLegalMovesBoards(colour);
+        List<Pair<String, Chessboard>> legalMovesBoards = generateAllPseudolegalMoveBoards(colour);
         List<String> legalMovesSAN = new ArrayList<>();
 
         for (Pair<String, Chessboard> pair : legalMovesBoards)
@@ -321,6 +320,69 @@ public class Chessboard
         }
 
         return legalMovesSAN;
+    }
+
+    public List<Pair<String, Chessboard>> generateAllLegalMoveBoards(Piece.Colour colour)
+    {
+        List<Pair<String, Chessboard>> pseudolegalMovePairs = generateAllPseudolegalMoveBoards(colour);
+        List<Pair<String, Chessboard>> legalMovePairs = new ArrayList<>();
+
+        for (Pair<String, Chessboard> movePair : pseudolegalMovePairs)
+        {
+            Chessboard resultingBoard = movePair.getValue();
+
+            if (!resultingBoard.isInCheck(colour))
+            {
+                legalMovePairs.add(movePair);
+            }
+        }
+
+        return legalMovePairs;
+    }
+
+    public List<String> generateAllLegalMoveSAN(Piece.Colour colour)
+    {
+        List<Pair<String, Chessboard>> legalMovesBoards = generateAllLegalMoveBoards(colour);
+        List<String> legalMovesSAN = new ArrayList<>();
+
+        for (Pair<String, Chessboard> pair : legalMovesBoards)
+        {
+            legalMovesSAN.add(pair.getKey());
+        }
+
+        return legalMovesSAN;
+    }
+
+    public int findKingPosition(Piece.Colour colour)
+    {
+        // TODO use the iterator here
+        for (int i = 0; i < BOARD_SIZE; i++)
+        {
+            Piece p = getPiece(i);
+            if (p != null && p.getColour() == colour&& p.getType() == PieceType.KING ) return i;
+        }
+        // Return -1 if the king is missing (invalid board)
+        return -1;
+    }
+
+    public boolean isInCheck(Piece.Colour colour)
+    {
+        int kingPos = findKingPosition(colour);
+        if (kingPos == -1) return true; // If the king is missing, treat it as check
+
+        Piece.Colour opponent = (colour == Piece.Colour.WHITE) ? Piece.Colour.BLACK : Piece.Colour.WHITE;
+
+        for (int i = 0; i < BOARD_SIZE; i++)
+        {
+            Piece p = getPiece(i);
+            if (p != null && p.getColour() == opponent)
+            {
+                List<Integer> attacks = p.generateMoves(i, this);
+                if (attacks.contains(kingPos)) return true;
+            }
+        }
+
+        return false;
     }
 
     private boolean needsDisambiguation(int originPos, int targetPos, Piece piece)

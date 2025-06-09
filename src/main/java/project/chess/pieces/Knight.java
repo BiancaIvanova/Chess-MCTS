@@ -1,9 +1,12 @@
 package project.chess.pieces;
+import project.chess.BoardUtils;
 import project.chess.Chessboard;
 import project.chess.PieceType;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static project.chess.Chessboard.BOARD_SIZE;
 
 public class Knight extends Piece
 {
@@ -18,17 +21,17 @@ public class Knight extends Piece
         List<Integer> moves = new ArrayList<>();
         int[] offsets = {-17, -15, -10, -6, 6, 10, 15, 17};
 
-        int row = position / 8;
-        int col = position % 8;
+        int row = BoardUtils.getRank(position);
+        int col = BoardUtils.getFile(position);
 
         for (int offset : offsets)
         {
             int target = position + offset;
 
-            if (target < 0 || target >= 64) continue;
+            if (target < 0 || target >= BOARD_SIZE) continue;
 
-            int targetRow = target / 8;
-            int targetCol = target % 8;
+            int targetRow = BoardUtils.getRank(target);
+            int targetCol = BoardUtils.getFile(target);
             int rowDelta = Math.abs(targetRow - row);
             int colDelta = Math.abs(targetCol - col);
 

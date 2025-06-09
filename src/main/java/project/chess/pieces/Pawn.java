@@ -1,5 +1,6 @@
 package project.chess.pieces;
 
+import project.chess.BoardUtils;
 import project.chess.Chessboard;
 import project.chess.PieceType;
 
@@ -56,7 +57,7 @@ public class Pawn extends Piece
     private void addCaptureMoves(int position, Chessboard board, List<Integer> moves)
     {
         int direction = (this.getColour() == Colour.WHITE) ? 8 : -8;
-        int col = position % BOARD_WIDTH;
+        int col = BoardUtils.getFile(position);
         int[] captureOffsets = {direction - 1, direction + 1};
 
         for (int offset : captureOffsets)

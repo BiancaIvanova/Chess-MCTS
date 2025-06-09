@@ -1,5 +1,6 @@
 package project.chess.pieces;
 
+import project.chess.BoardUtils;
 import project.chess.Chessboard;
 import project.chess.PieceFactory;
 import project.chess.PieceType;
@@ -32,12 +33,12 @@ public abstract class Piece
 
             while (true)
             {
-                int prevCol = target % BOARD_WIDTH;
+                int prevCol = BoardUtils.getFile(target);
                 target += dir;
 
                 if (!isOnBoard(target)) break;
 
-                int currentCol = target % BOARD_WIDTH;
+                int currentCol = BoardUtils.getFile(target);
                 if (isWrapping(prevCol, currentCol, dir)) break;
 
                 Piece targetPiece = board.getPiece(target);

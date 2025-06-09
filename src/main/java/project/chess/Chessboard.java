@@ -49,13 +49,13 @@ public class Chessboard
         StringBuilder fen = new StringBuilder();
 
         // Loop from row 7 to 0
-        for (int row = 7; row >= 0; row--)
+        for (int row = ( BOARD_WIDTH - 1 ); row >= 0; row--)
         {
             int emptyCount = 0;
 
             for (int col = 0; col < BOARD_WIDTH; col++)
             {
-                int position = ( row * BOARD_WIDTH) + col;
+                int position = BoardUtils.toIndex(row, col);
                 Piece piece = getPiece(position);
 
                 if (piece == null)
@@ -112,7 +112,7 @@ public class Chessboard
             }
             else
             {
-                int position = (row * BOARD_WIDTH) + col;
+                int position = BoardUtils.toIndex(row, col);
                 Piece piece = PieceFactory.fromFENSymbol(c);
                 setPiece(position, piece);
                 col++;
@@ -130,7 +130,7 @@ public class Chessboard
 
             for (int col = 0; col < BOARD_WIDTH; col++)
             {
-                int position = ( row * BOARD_WIDTH) + col;
+                int position = BoardUtils.toIndex(row, col);
                 Piece piece = getPiece(position);
                 char symbol = '.';
 
@@ -172,7 +172,7 @@ public class Chessboard
                 }
                 else
                 {
-                    String toSquare = posToAlgebraic(targetPos);
+                    String toSquare = BoardUtils.toCoordinate(targetPos);
                     String pieceSymbol = PieceFactory.toAlgebraicNotation(piece);
 
                     String disambiguation = "";
@@ -232,15 +232,6 @@ public class Chessboard
         return legalMovesSAN;
     }
 
-    public static String posToAlgebraic(int pos)
-    {
-        int file = pos % BOARD_WIDTH;
-        int rank = pos / BOARD_WIDTH;
-        char fileChar = (char) ('a' + (file));
-        char rankChar = (char) ('1' + (rank));
-        return "" + fileChar + rankChar;
-    }
-
     private boolean needsDisambiguation(int originPos, int targetPos, Piece piece)
     {
         for (int pos = 0; pos < BOARD_SIZE; pos++)
@@ -259,8 +250,8 @@ public class Chessboard
 
     private String getDisambiguation(int originPos, int targetPos, Piece piece)
     {
-        int originFile = originPos % BOARD_WIDTH;
-        int originRank = originPos / BOARD_WIDTH;
+        int originFile = BoardUtils.getFile(originPos);
+        int originRank = BoardUtils.getRank(originPos);
 
         List<Integer> others = new ArrayList<>();
 
@@ -281,13 +272,13 @@ public class Chessboard
 
         for (int pos : others)
         {
-            if ((pos % BOARD_WIDTH) == originFile) sameFile = true;
-            if ((pos / BOARD_WIDTH) == originRank) sameRank = true;
+            if ((BoardUtils.getFile(pos)) == originFile) sameFile = true;
+            if ((BoardUtils.getRank(pos)) == originRank) sameRank = true;
         }
 
         if (!sameFile) return "" + (char)('a' + originFile);
         if (!sameRank) return "" + (char)('1' + originRank);
-        return "" + (char)('a' + originFile) + (char)('1' + originRank);
+        return BoardUtils.toCoordinate(originPos);
     }
 
 }

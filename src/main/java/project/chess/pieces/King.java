@@ -1,5 +1,6 @@
 package project.chess.pieces;
 
+import project.chess.BoardUtils;
 import project.chess.Chessboard;
 import project.chess.PieceType;
 
@@ -23,7 +24,7 @@ public class King extends Piece
     {
         List<Integer> moves = new ArrayList<>();
 
-        int prevCol = position % BOARD_WIDTH;
+        int prevCol = BoardUtils.getFile(position);
 
         for (int dir : KING_DIRECTIONS)
         {
@@ -31,7 +32,7 @@ public class King extends Piece
 
             if (!isOnBoard(target)) continue;
 
-            int currentCol = target % BOARD_WIDTH;
+            int currentCol = BoardUtils.getFile(target);
             if (isWrapping(prevCol, currentCol, dir)) continue;
 
             Piece targetPiece = board.getPiece(target);

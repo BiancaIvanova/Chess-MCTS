@@ -5,6 +5,7 @@ import project.chess.pieces.Piece;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.EnumSet;
 
 public class Chessboard
 {
@@ -12,6 +13,8 @@ public class Chessboard
     public static final int BOARD_SIZE = 64;
 
     private IHashDynamic<Integer, Piece> boardMap;
+
+    private final EnumSet<CastlingRight> castlingRights =  EnumSet.allOf(CastlingRight.class);
 
     public Chessboard()
     {
@@ -36,6 +39,70 @@ public class Chessboard
         else
         {
             boardMap.add(position, piece);
+        }
+    }
+
+    public void move(int from, int to)
+    {
+        Piece movingPiece = getPiece(from);
+        if ( movingPiece == null ) return;
+
+        // Move the piece
+        setPiece(to, movingPiece);
+        setPiece(from, null);
+
+        if (!castlingRights.isEmpty())
+        {
+            updateCastlingRights(from, to);
+        }
+
+        // TODO handle castling rook movement, en passant, promotion, and halfmove clock
+    }
+
+    private void updateCastlingRights(int from, int to)
+    {
+        Piece movingPiece = getPiece(from);
+
+        // Remove castling rights if necessary
+        if (movingPiece.getType() == PieceType.KING)
+        {
+            if (movingPiece.getColour() == Piece.Colour.WHITE)
+            {
+                castlingRights.remove(CastlingRight.WHITE_KINGSIDE);
+                castlingRights.remove(CastlingRight.WHITE_QUEENSIDE);
+            }
+            else
+            {
+                castlingRights.remove(CastlingRight.BLACK_KINGSIDE);
+                castlingRights.remove(CastlingRight.BLACK_QUEENSIDE);
+            }
+        }
+
+        if (movingPiece.getType() == PieceType.ROOK)
+        {
+            // If rook moves from original position, revoke appropriate castling right
+            if (from == BoardUtils.toIndex(0, 0)) // a1
+                castlingRights.remove(CastlingRight.WHITE_QUEENSIDE);
+            else if (from == BoardUtils.toIndex(0, 7)) // h1
+                castlingRights.remove(CastlingRight.WHITE_KINGSIDE);
+            else if (from == BoardUtils.toIndex(7, 0)) // a8
+                castlingRights.remove(CastlingRight.BLACK_QUEENSIDE);
+            else if (from == BoardUtils.toIndex(7, 7)) // h8
+                castlingRights.remove(CastlingRight.BLACK_KINGSIDE);
+        }
+
+        // Remove castling rights if a rook is captured
+        Piece capturedPiece = getPiece(to);
+        if (capturedPiece != null && capturedPiece.getType() == PieceType.ROOK)
+        {
+            if (to == BoardUtils.toIndex(0, 0)) // a1
+                castlingRights.remove(CastlingRight.WHITE_QUEENSIDE);
+            else if (to == BoardUtils.toIndex(0, 7)) // h1
+                castlingRights.remove(CastlingRight.WHITE_KINGSIDE);
+            else if (to == BoardUtils.toIndex(7, 0)) // a8
+                castlingRights.remove(CastlingRight.BLACK_QUEENSIDE);
+            else if (to == BoardUtils.toIndex(7, 7)) // h8
+                castlingRights.remove(CastlingRight.BLACK_KINGSIDE);
         }
     }
 

@@ -29,7 +29,7 @@ public class ChessApplication
 		for (String move : whiteMoves) {
 			System.out.println(move);
 		}
-		System.out.println("\nNumber of calculated moves: " + whiteMoves.toArray().length);
+		System.out.println("\nNumber of calculated moves: " + whiteMoves.size());
 
 		// Export FEN back to string
 		System.out.println("\nExported FEN:");

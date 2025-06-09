@@ -12,6 +12,10 @@ public class Chessboard
     public static final int BOARD_WIDTH = 8;
     public static final int BOARD_SIZE = 64;
 
+    // King position cache
+    private int whiteKingPosition = -1;
+    private int blackKingPosition = -1;
+
     private IHashDynamic<Integer, Piece> boardMap;
 
     public final EnumSet<CastlingRight> castlingRights;
@@ -33,13 +37,28 @@ public class Chessboard
 
     public void setPiece(int position, Piece piece)
     {
+        Piece oldPiece = getPiece(position);
+
         if (piece == null)
         {
+            if (oldPiece != null && oldPiece.getType() == PieceType.KING)
+            {
+                if (oldPiece.getColour() == Piece.Colour.WHITE) whiteKingPosition = -1;
+                else blackKingPosition = -1;
+            }
+
             boardMap.delete(position);
         }
         else
         {
             boardMap.add(position, piece);
+
+            // Update King position cache
+            if (piece.getType() == PieceType.KING)
+            {
+                if (piece.getColour() == Piece.Colour.WHITE) whiteKingPosition = position;
+                else blackKingPosition = position;
+            }
         }
     }
 
@@ -47,6 +66,14 @@ public class Chessboard
     {
         Piece movingPiece = getPiece(from);
         if ( movingPiece == null ) return;
+
+        if (movingPiece.getType() == PieceType.KING)
+        {
+            if (movingPiece.getColour() == Piece.Colour.WHITE)
+                whiteKingPosition = to;
+            else
+                blackKingPosition = to;
+        }
 
         if (!castlingRights.isEmpty())
         {
@@ -184,6 +211,9 @@ public class Chessboard
     {
         boardMap = new HashingDynamic<>();
 
+        whiteKingPosition = -1;
+        blackKingPosition = -1;
+
         String[] parts = fen.split(" ");
         String piecePlacement = parts[0];
 
@@ -209,6 +239,9 @@ public class Chessboard
                 col++;
             }
         }
+
+        // Fallback in case setPiece doesn't initialise the cache properly
+        recalculateKingPositions();
     }
 
     public void printBoard()
@@ -355,14 +388,21 @@ public class Chessboard
 
     public int findKingPosition(Piece.Colour colour)
     {
-        // TODO use the iterator here
-        for (int i = 0; i < BOARD_SIZE; i++)
+        return (colour == Piece.Colour.WHITE) ? whiteKingPosition : blackKingPosition;
+    }
+
+    public void recalculateKingPositions()
+    {
+        whiteKingPosition = -1;
+        blackKingPosition = -1;
+
+        for (int position = 0; position < BOARD_SIZE; position++)
         {
-            Piece p = getPiece(i);
-            if (p != null && p.getColour() == colour&& p.getType() == PieceType.KING ) return i;
+            Piece piece = getPiece(position);
+
+            if (piece != null && piece.getType() == PieceType.KING) whiteKingPosition = position;
+            else blackKingPosition = position;
         }
-        // Return -1 if the king is missing (invalid board)
-        return -1;
     }
 
     public boolean isInCheck(Piece.Colour colour)

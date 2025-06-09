@@ -125,8 +125,7 @@ public class King extends Piece
 
     private boolean wouldBeInCheck(Chessboard board, int from, int to)
     {
-        Chessboard testBoard = new Chessboard();
-        testBoard.importFEN(board.toFEN());
+        Chessboard testBoard = new Chessboard(board);
         testBoard.move(from, to);
         return testBoard.isInCheck(this.colour);
     }

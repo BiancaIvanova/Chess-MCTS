@@ -18,7 +18,7 @@ public class Chessboard
 
     private IHashDynamic<Integer, Piece> boardMap;
 
-    public final EnumSet<CastlingRight> castlingRights;
+    public EnumSet<CastlingRight> castlingRights;
 
     public Chessboard()
     {
@@ -44,6 +44,8 @@ public class Chessboard
         this.blackKingPosition = other.blackKingPosition;
 
         this.castlingRights = EnumSet.copyOf(other.castlingRights);
+
+        recalculateKingPositions();
     }
 
     public Piece getPiece(int position)
@@ -61,11 +63,11 @@ public class Chessboard
 
         if (piece == null)
         {
-            if (oldPiece != null && oldPiece.getType() == PieceType.KING)
-            {
-                if (oldPiece.getColour() == Piece.Colour.WHITE) whiteKingPosition = -1;
-                else blackKingPosition = -1;
-            }
+//            if (oldPiece != null && oldPiece.getType() == PieceType.KING)
+//            {
+//                if (oldPiece.getColour() == Piece.Colour.WHITE) whiteKingPosition = -1;
+//                else blackKingPosition = -1;
+//            }
 
             boardMap.delete(position);
         }
@@ -237,7 +239,7 @@ public class Chessboard
         return fen.toString();
     }
 
-    public void importFEN(String fen)
+    public void importBasicFEN(String fen)
     {
         boardMap = new HashingDynamic<>();
 

@@ -4,6 +4,7 @@ import static project.chess.Chessboard.BOARD_WIDTH;
 
 public class BoardUtils
 {
+    // Returns the file, from 0-7
     public static int getFile(int position)
     {
         return position % BOARD_WIDTH;

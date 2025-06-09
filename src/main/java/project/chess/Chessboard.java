@@ -14,11 +14,12 @@ public class Chessboard
 
     private IHashDynamic<Integer, Piece> boardMap;
 
-    private final EnumSet<CastlingRight> castlingRights =  EnumSet.allOf(CastlingRight.class);
+    public final EnumSet<CastlingRight> castlingRights;
 
     public Chessboard()
     {
         boardMap = new HashingDynamic<>();
+        castlingRights = EnumSet.allOf(CastlingRight.class);
     }
 
     public Piece getPiece(int position)
@@ -47,16 +48,39 @@ public class Chessboard
         Piece movingPiece = getPiece(from);
         if ( movingPiece == null ) return;
 
-        // Move the piece
-        setPiece(to, movingPiece);
-        setPiece(from, null);
-
         if (!castlingRights.isEmpty())
         {
             updateCastlingRights(from, to);
         }
 
-        // TODO handle castling rook movement, en passant, promotion, and halfmove clock
+        // Move the piece
+        setPiece(to, movingPiece);
+        setPiece(from, null);
+
+        // Handle castling rook movement
+        if ((movingPiece.getType() == PieceType.KING) && (Math.abs(to - from) == 2))
+        {
+            int rookFrom, rookTo;
+
+            if (to > from)
+            {
+                // Kingside castling
+                rookFrom = BoardUtils.toIndex(BoardUtils.getRank(from), 7);
+                rookTo = BoardUtils.toIndex(BoardUtils.getRank(from), 5);
+            }
+            else
+            {
+                // Queenside castling
+                rookFrom = BoardUtils.toIndex(BoardUtils.getRank(from), 0);
+                rookTo = BoardUtils.toIndex(BoardUtils.getRank(from), 3);
+            }
+
+            Piece rook = getPiece(rookFrom);
+            setPiece(rookTo, rook);
+            setPiece(rookFrom, null);
+        }
+
+        // TODO en passant, promotion, and halfmove clock
     }
 
     private void updateCastlingRights(int from, int to)
@@ -347,5 +371,7 @@ public class Chessboard
         if (!sameRank) return "" + (char)('1' + originRank);
         return BoardUtils.toCoordinate(originPos);
     }
+
+    public boolean isSquareAttacked(int num, Piece.Colour colour) { return false; } // TODO TEMP DELETE ASAP
 
 }

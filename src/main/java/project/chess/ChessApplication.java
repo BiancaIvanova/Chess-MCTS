@@ -17,23 +17,29 @@ public class ChessApplication
 		Chessboard board = new Chessboard();
 
 		// Start position FEN
-		String startFEN = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8";
+		String startFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQK2R";
 		board.importFEN(startFEN);
 
 		// Print the board
 		board.printBoard();
 
-		// Generate all legal moves for white
-		System.out.println("\nLegal moves for White:");
-		List<String> whiteMoves = board.generateAllLegalMovesSAN(project.chess.pieces.Piece.Colour.WHITE);
-		for (String move : whiteMoves) {
-			System.out.println(move);
-		}
-		System.out.println("\nNumber of calculated moves: " + whiteMoves.size());
+//		// Generate all legal moves for white
+//		System.out.println("\nLegal moves for White:");
+//		List<String> whiteMoves = board.generateAllLegalMovesSAN(project.chess.pieces.Piece.Colour.WHITE);
+//		for (String move : whiteMoves) {
+//			System.out.println(move);
+//		}
+//		System.out.println("\nNumber of calculated moves: " + whiteMoves.size());
 
 		// Export FEN back to string
 		System.out.println("\nExported FEN:");
 		System.out.println(board.toFEN());
+
+		board.move(8, 16);
+		board.printBoard();
+
+		board.move(4, 6);
+		board.printBoard();
 
 //		Chessboard board =  new Chessboard();
 //

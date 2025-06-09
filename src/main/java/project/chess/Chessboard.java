@@ -71,6 +71,11 @@ public class Chessboard
         }
         else
         {
+            // TODO CHECK THAT THIS WORKED
+            if (oldPiece != null)
+            {
+                boardMap.delete(position);
+            }
             boardMap.add(position, piece);
 
             // Update King position cache
@@ -310,9 +315,13 @@ public class Chessboard
 
             for (int targetPos : targets)
             {
-                String sanMove;
+                Piece targetPiece = getPiece(targetPos);
 
-                boolean isCapture = isOccupied(targetPos) && getPiece(targetPos).getColour() != colour;
+                boolean isCapture = isOccupied(targetPos) && targetPiece.getColour() != colour;
+
+                if (isCapture && targetPiece.getType() == PieceType.KING) continue;
+
+                String sanMove;
 
                 // Castling detection
                 if (piece.getType() == PieceType.KING && Math.abs(targetPos - originPos) == 2)
@@ -363,6 +372,7 @@ public class Chessboard
 
         return legalMovesBoards;
     }
+
 
     public List<String> generateAllPseudolegalMoveSAN(Piece.Colour colour)
     {
@@ -452,7 +462,9 @@ public class Chessboard
 
     public boolean isCheckmate(Piece.Colour colour)
     {
-        return isInCheck(colour) && generateAllPseudolegalMoveBoards(colour).isEmpty();
+        System.out.println("is in check: " + isInCheck(colour));
+        System.out.println("is empty: " + generateAllLegalMoveBoards(colour).isEmpty());
+        return isInCheck(colour) && generateAllLegalMoveBoards(colour).isEmpty();
     }
 
     public boolean isStalemate(Piece.Colour colour)

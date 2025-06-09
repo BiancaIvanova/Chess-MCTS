@@ -63,17 +63,10 @@ public class Chessboard
 
         if (piece == null)
         {
-//            if (oldPiece != null && oldPiece.getType() == PieceType.KING)
-//            {
-//                if (oldPiece.getColour() == Piece.Colour.WHITE) whiteKingPosition = -1;
-//                else blackKingPosition = -1;
-//            }
-
             boardMap.delete(position);
         }
         else
         {
-            // TODO CHECK THAT THIS WORKED
             if (oldPiece != null)
             {
                 boardMap.delete(position);

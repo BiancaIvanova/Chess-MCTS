@@ -3,6 +3,8 @@ package project.chess.pieces;
 import project.chess.Chessboard;
 import project.chess.PieceType;
 
+import static project.chess.Chessboard.BOARD_WIDTH;
+
 import java.util.ArrayList;
 import java.util.List;
 

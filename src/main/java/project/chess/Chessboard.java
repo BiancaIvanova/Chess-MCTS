@@ -8,6 +8,9 @@ import java.util.List;
 
 public class Chessboard
 {
+    public static final int BOARD_WIDTH = 8;
+    public static final int BOARD_SIZE = 64;
+
     private IHashDynamic<Integer, Piece> boardMap;
 
     public Chessboard()
@@ -50,9 +53,9 @@ public class Chessboard
         {
             int emptyCount = 0;
 
-            for (int col = 0; col < 8; col++)
+            for (int col = 0; col < BOARD_WIDTH; col++)
             {
-                int position = ( row * 8 ) + col;
+                int position = ( row * BOARD_WIDTH) + col;
                 Piece piece = getPiece(position);
 
                 if (piece == null)
@@ -109,7 +112,7 @@ public class Chessboard
             }
             else
             {
-                int position = (row * 8) + col;
+                int position = (row * BOARD_WIDTH) + col;
                 Piece piece = PieceFactory.fromFENSymbol(c);
                 setPiece(position, piece);
                 col++;
@@ -125,9 +128,9 @@ public class Chessboard
         {
             System.out.print((row + 1) + " |");
 
-            for (int col = 0; col < 8; col++)
+            for (int col = 0; col < BOARD_WIDTH; col++)
             {
-                int position = ( row * 8 ) + col;
+                int position = ( row * BOARD_WIDTH) + col;
                 Piece piece = getPiece(position);
                 char symbol = '.';
 
@@ -149,7 +152,7 @@ public class Chessboard
     {
         List<Pair<String, Chessboard>> legalMovesBoards = new ArrayList<>();
 
-        for (int originPos = 0; originPos < 64; originPos++)
+        for (int originPos = 0; originPos < BOARD_SIZE; originPos++)
         {
             Piece piece = getPiece(originPos);
             if (piece == null || piece.getColour() != colour) continue;
@@ -186,7 +189,7 @@ public class Chessboard
                     {
                         if (isCapture)
                         {
-                            char fromFileChar = (char) ('a' + (originPos % 8));
+                            char fromFileChar = (char) ('a' + (originPos % BOARD_WIDTH));
                             sanMove = fromFileChar + "x" + toSquare;
                         }
                         else
@@ -231,8 +234,8 @@ public class Chessboard
 
     public static String posToAlgebraic(int pos)
     {
-        int file = pos % 8;
-        int rank = pos / 8;
+        int file = pos % BOARD_WIDTH;
+        int rank = pos / BOARD_WIDTH;
         char fileChar = (char) ('a' + (file));
         char rankChar = (char) ('1' + (rank));
         return "" + fileChar + rankChar;
@@ -240,7 +243,7 @@ public class Chessboard
 
     private boolean needsDisambiguation(int originPos, int targetPos, Piece piece)
     {
-        for (int pos = 0; pos < 64; pos++)
+        for (int pos = 0; pos < BOARD_SIZE; pos++)
         {
             if (pos == originPos) continue;
             Piece other = getPiece(pos);
@@ -256,12 +259,12 @@ public class Chessboard
 
     private String getDisambiguation(int originPos, int targetPos, Piece piece)
     {
-        int originFile = originPos % 8;
-        int originRank = originPos / 8;
+        int originFile = originPos % BOARD_WIDTH;
+        int originRank = originPos / BOARD_WIDTH;
 
         List<Integer> others = new ArrayList<>();
 
-        for (int pos = 0; pos < 64; pos++)
+        for (int pos = 0; pos < BOARD_SIZE; pos++)
         {
             if (pos == originPos) continue;
             Piece other = getPiece(pos);
@@ -278,8 +281,8 @@ public class Chessboard
 
         for (int pos : others)
         {
-            if ((pos % 8) == originFile) sameFile = true;
-            if ((pos / 8) == originRank) sameRank = true;
+            if ((pos % BOARD_WIDTH) == originFile) sameFile = true;
+            if ((pos / BOARD_WIDTH) == originRank) sameRank = true;
         }
 
         if (!sameFile) return "" + (char)('a' + originFile);

@@ -7,12 +7,11 @@ import project.chess.PieceType;
 import java.util.ArrayList;
 import java.util.List;
 
+import static project.chess.Chessboard.BOARD_SIZE;
+import static project.chess.Chessboard.BOARD_WIDTH;
+
 public abstract class Piece
 {
-    protected static final int BOARD_SIZE = 64;
-    protected static final int BOARD_WIDTH = 8;
-    protected static final int BOARD_HEIGHT = 8;
-
     public enum Colour
     {
         WHITE,

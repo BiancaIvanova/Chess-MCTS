@@ -349,7 +349,14 @@ public class Chessboard
                         {
                             sanMove = toSquare;
                         }
-                        // TODO add promotion handling
+
+                        if ((BoardUtils.getRank(targetPos) == 0 && piece.getColour() == Piece.Colour.BLACK) ||
+                                (BoardUtils.getRank(targetPos) == 7 && piece.getColour() == Piece.Colour.WHITE))
+                        {
+                            legalMovesBoards.addAll(generatePromotionMoves(originPos, targetPos, piece, isCapture));
+                            continue;
+                        }
+
                     }
                     else
                     {
@@ -411,6 +418,46 @@ public class Chessboard
         }
 
         return legalMovesSAN;
+    }
+
+    private List<Pair<String, Chessboard>> generatePromotionMoves(int originPos, int targetPos, Piece movingPawn, boolean isCapture)
+    {
+        List<Pair<String, Chessboard>> promotionMoves = new ArrayList<>();
+        char fromFileChar = (char) ('a' + (originPos % BOARD_WIDTH));
+        String toSquare = BoardUtils.toCoordinate(targetPos);
+
+        PieceType[] promotionTypes = {
+                PieceType.QUEEN,
+                PieceType.ROOK,
+                PieceType.BISHOP,
+                PieceType.KNIGHT
+        };
+
+        for (PieceType promotionType : promotionTypes)
+        {
+            String san;
+
+            if (isCapture)
+            {
+                san = fromFileChar + "x" + toSquare + "=" + promotionType.getAlgebraic();
+            }
+            else
+            {
+                san = toSquare + "=" + promotionType.getAlgebraic();
+            }
+
+            Chessboard newBoard = new Chessboard(this);
+            newBoard.setPiece(originPos, null);
+
+            Piece promotedPiece = promotionType.create(movingPawn.getColour());
+            newBoard.setPiece(targetPos, promotedPiece);
+
+            // TODO newBoard.setEnPassantSquare(null);
+
+            promotionMoves.add(new Pair<>(san, newBoard));
+        }
+
+        return promotionMoves;
     }
 
     public int getKingPosition(Piece.Colour colour)

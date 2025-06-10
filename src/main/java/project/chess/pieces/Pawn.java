@@ -76,6 +76,16 @@ public class Pawn extends Piece
                     {
                         moves.add(target);
                     }
+                    else if (board.getEnPassantTarget() >= 0 && target == board.getEnPassantTarget())
+                    {
+                        int behind = target - direction;
+                        Piece behindPiece = board.getPiece(behind);
+
+                        if (behindPiece instanceof Pawn && behindPiece.getColour() != this.getColour())
+                        {
+                            moves.add(target);
+                        }
+                    }
                 }
             }
         }

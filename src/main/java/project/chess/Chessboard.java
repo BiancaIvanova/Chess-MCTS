@@ -1,5 +1,7 @@
 package project.chess;
 
+import lombok.Getter;
+import lombok.Setter;
 import project.chess.datastructures.*;
 import project.chess.pieces.Piece;
 
@@ -15,6 +17,11 @@ public class Chessboard
     // King position cache
     private int whiteKingPosition = -1;
     private int blackKingPosition = -1;
+
+    // En passant target
+    @Setter
+    @Getter
+    private int enPassantTarget = -1;
 
     private IHashDynamic<Integer, Piece> boardMap;
 
@@ -43,6 +50,7 @@ public class Chessboard
         this.whiteKingPosition = other.whiteKingPosition;
         this.blackKingPosition = other.blackKingPosition;
 
+        this.enPassantTarget = other.enPassantTarget;
         this.castlingRights = EnumSet.copyOf(other.castlingRights);
 
         recalculateKingPositions();
@@ -127,7 +135,24 @@ public class Chessboard
             setPiece(rookFrom, null);
         }
 
-        // TODO en passant, promotion, and halfmove clock
+        // Handle en passant capture
+        if (movingPiece.getType() == PieceType.PAWN && to == enPassantTarget)
+        {
+            int direction = (movingPiece.getColour() == Piece.Colour.WHITE) ? -1 : 1;
+            int capturedPawnPos = to + (8 * direction);
+            setPiece(capturedPawnPos, null);
+        }
+
+        // Reset en passant by default
+        enPassantTarget = -1;
+
+        // Detect if this pawn move enables en passant next turn
+        if (movingPiece.getType() == PieceType.PAWN && Math.abs(to - from) == 16)
+        {
+            enPassantTarget = (from + to) / 2;
+        }
+
+        // TODO Promotion
     }
 
     private void updateCastlingRights(int from, int to)
@@ -327,9 +352,9 @@ public class Chessboard
                 {
                     String toSquare = BoardUtils.toCoordinate(targetPos);
                     String pieceSymbol = PieceFactory.toAlgebraicNotation(piece);
-
                     String disambiguation = "";
 
+                    // Disambiguation for non-pawn pieces
                     if (piece.getType() != PieceType.PAWN)
                     {
                         if (needsDisambiguation(originPos, targetPos, piece))
@@ -338,8 +363,19 @@ public class Chessboard
                         }
                     }
 
+                    // Pawn move handling (including en passant)
                     if (piece.getType() == PieceType.PAWN)
                     {
+                        boolean isEnPassant = false;
+
+                        // En passant
+                        if (targetPos == getEnPassantTarget() && !isOccupied(targetPos))
+                        {
+                            isEnPassant = true;
+                            isCapture = true;
+                        }
+
+
                         if (isCapture)
                         {
                             char fromFileChar = (char) ('a' + (originPos % BOARD_WIDTH));

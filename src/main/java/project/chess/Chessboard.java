@@ -187,7 +187,7 @@ public class Chessboard
         return boardMap.contains(position);
     }
 
-    public String toFEN()
+    public String toBasicFEN()
     {
         StringBuilder fen = new StringBuilder();
 

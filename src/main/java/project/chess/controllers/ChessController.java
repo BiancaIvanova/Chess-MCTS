@@ -13,6 +13,6 @@ public class ChessController
     @GetMapping("/board")
     public String getBoardFEN()
     {
-        return board.toFEN();
+        return board.toBasicFEN();
     }
 }

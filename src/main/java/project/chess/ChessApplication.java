@@ -21,9 +21,12 @@ public class ChessApplication
 		System.out.println("Initial Position:");
 		board.printBoard();
 
+		long  startTime = System.currentTimeMillis();
+
 		for (int depth = 1; depth <= 10; depth++) {
 			long nodes = Perft.perft(board, depth, Piece.Colour.WHITE);
-			System.out.printf("Depth %d: %d nodes\n", depth, nodes);
+			long elapsedMillis = System.currentTimeMillis() - startTime;
+			System.out.printf("Depth %d: %d nodes  \t\tTime elapsed: %.3f seconds\n", depth, nodes, elapsedMillis / 1000.0);
 		}
 
 //		Chessboard board = new Chessboard();

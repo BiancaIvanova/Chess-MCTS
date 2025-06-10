@@ -16,7 +16,7 @@ public class ChessApplication
 		//SpringApplication.run(ChessApplication.class, args);
 
 		Chessboard board = new Chessboard();
-		board.importBasicFEN("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1");
+		board.importBasicFEN("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1");
 
 		System.out.println("Initial Position:");
 		board.printBoard();

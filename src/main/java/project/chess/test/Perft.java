@@ -37,4 +37,11 @@ public class Perft
 
         System.out.printf("Total nodes at depth %d: %d\n", depth, total);
     }
+
+    public static long perftFromFEN(String fen, int depth, Piece.Colour sideToMove)
+    {
+        Chessboard board = new Chessboard();
+        board.importBasicFEN(fen);
+        return perft(board, depth, sideToMove);
+    }
 }

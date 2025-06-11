@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    #container: maven:3.9.9-amazoncorretto-21
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -19,6 +20,11 @@ jobs:
           distribution: 'temurin'
           java-version: 21
           cache: 'maven'
+
+      - name: Install Maven
+        run: |
+          sudo apt update
+          sudo apt install -y maven
 
       - name: Build and Run Tests with Maven
         run: mvn test

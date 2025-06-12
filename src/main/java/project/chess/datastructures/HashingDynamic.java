@@ -134,7 +134,7 @@ public class HashingDynamic<K, V> implements IHashDynamic<K, V>, Iterable<Elemen
         // Validate the input value and check if the value is null
         if (value == null)
         {
-            throw new NullPointerException("Value cannot be null");
+            throw new NullPointerException("getValue cannot be null");
         }
 
         // Resize if the load factor is above the threshold

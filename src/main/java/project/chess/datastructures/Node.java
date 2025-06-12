@@ -15,21 +15,21 @@ public class Node<T>
         this.children = new ArrayList<>();
     }
 
-    public T Value() { return value; }
+    public T getValue() { return value; }
 
-    public Node<T> Parent() { return parent; }
+    public Node<T> getParent() { return parent; }
 
-    public void Parent(Node<T> p) { parent = p; }
+    public void setParent(Node<T> p) { parent = p; }
 
-    public List<Node<T>> Children() { return children; }
+    public List<Node<T>> getChildren() { return children; }
 
-    public void AddChild(Node<T> child)
+    public void addChild(Node<T> child)
     {
-        child.Parent(this);
+        child.setParent(this);
         children.add(child);
     }
 
-    public boolean RemoveChild(Node<T> child)  { return children.remove(child); }
+    public boolean removeChild(Node<T> child)  { return children.remove(child); }
 
     @Override
     public String toString() { return value.toString(); }

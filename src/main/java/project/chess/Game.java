@@ -4,7 +4,9 @@ import project.chess.datastructures.*;
 import project.chess.pieces.Piece;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Game
 {
@@ -132,6 +134,110 @@ public class Game
      */
     public String getFEN()
     {
-        return board.toBasicFEN();
+        StringBuilder fen = new StringBuilder();
+
+        fen.append(board.toBasicFEN());
+        fen.append(' ');
+
+        fen.append(currentTurn == Piece.Colour.WHITE ? 'w' : 'b');
+        fen.append(' ');
+
+        fen.append(castlingRightsToFEN(board.getCastlingRights()));
+        fen.append(' ');
+
+        fen.append(enPassantTargetToFEN(board.getEnPassantTarget()));
+        fen.append(' ');
+
+        fen.append(halfMoveClock);
+        fen.append(' ');
+
+        fen.append(fullMoveNumber);
+
+        return fen.toString();
+    }
+
+    public void importFEN(String fen)
+    {
+        String[] parts = fen.trim().split("\\s+");
+        if (parts.length != 6)
+            throw new IllegalArgumentException("Invalid FEN string: must have 6 fields");
+
+        board.importBasicFEN(parts[0]);
+
+        if (parts[1].equalsIgnoreCase("w"))
+        {
+            currentTurn = Piece.Colour.WHITE;
+        }
+        else if (parts[1].equalsIgnoreCase("b"))
+        {
+            currentTurn = Piece.Colour.BLACK;
+        }
+        else
+            throw new IllegalArgumentException("Invalid colour format: must have either w or b");
+
+        board.setCastlingRights(parseCastlingRights(parts[2]));
+
+        board.setEnPassantTarget(parseEnPassantTargetFromFEN(parts[3]));
+
+        try {
+            halfMoveClock = Integer.parseInt(parts[4]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid format: half move number must be an integer");
+        }
+
+        try {
+            fullMoveNumber = Integer.parseInt(parts[5]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid format: full move number must be an integer");
+        }
+
+        moveHistorySAN.clear();
+        gameOver = false;
+        result = GameResult.ONGOING;
+    }
+
+    private String castlingRightsToFEN(Set<CastlingRight> castlingRights)
+    {
+        if (castlingRights.isEmpty()) return "-";
+
+        StringBuilder sb = new StringBuilder();
+        if (castlingRights.contains(CastlingRight.WHITE_KINGSIDE)) sb.append('K');
+        if (castlingRights.contains(CastlingRight.WHITE_QUEENSIDE)) sb.append('Q');
+        if (castlingRights.contains(CastlingRight.BLACK_KINGSIDE)) sb.append('k');
+        if (castlingRights.contains(CastlingRight.BLACK_QUEENSIDE)) sb.append('q');
+
+        return sb.toString();
+    }
+
+    private Set<CastlingRight> parseCastlingRights(String castlingRightsFEN)
+    {
+        Set<CastlingRight> castlingRights = new HashSet<>();
+        if (castlingRightsFEN.equals("-")) return castlingRights;
+
+        for (char c : castlingRightsFEN.toCharArray())
+        {
+            switch (c)
+            {
+                case 'K': castlingRights.add(CastlingRight.WHITE_KINGSIDE); break;
+                case 'Q': castlingRights.add(CastlingRight.WHITE_QUEENSIDE); break;
+                case 'k': castlingRights.add(CastlingRight.BLACK_KINGSIDE); break;
+                case 'q': castlingRights.add(CastlingRight.BLACK_QUEENSIDE); break;
+                default: break;
+            }
+        }
+
+        return castlingRights;
+    }
+
+    private String enPassantTargetToFEN(int enPassantTarget)
+    {
+        if (enPassantTarget < 0 || enPassantTarget >= Chessboard.BOARD_SIZE) return "-";
+        return BoardUtils.toCoordinate(enPassantTarget);
+    }
+
+    private int parseEnPassantTargetFromFEN(String fenSquare)
+    {
+        if (fenSquare.equals("-")) return -1;
+        return BoardUtils.toIndex(fenSquare);
     }
 }

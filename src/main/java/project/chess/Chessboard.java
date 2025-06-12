@@ -5,9 +5,7 @@ import lombok.Setter;
 import project.chess.datastructures.*;
 import project.chess.pieces.Piece;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.EnumSet;
+import java.util.*;
 
 public class Chessboard
 {
@@ -598,4 +596,16 @@ public class Chessboard
         if (!sameRank) return "" + (char)('1' + originRank);
         return BoardUtils.toCoordinate(originPos);
     }
+
+    public Set<CastlingRight> getCastlingRights() { return castlingRights; }
+
+    public void setCastlingRights(Set<CastlingRight> rights)
+    {
+        castlingRights.clear();
+        castlingRights.addAll(rights);
+    }
+
+    public int getEnPassantTarget() { return enPassantTarget; }
+
+    public void setEnPassantTarget(int target) { enPassantTarget = target; }
 }

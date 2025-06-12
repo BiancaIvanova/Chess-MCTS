@@ -20,6 +20,23 @@ public class BoardUtils
         return ( rank * BOARD_WIDTH ) + file;
     }
 
+    public static int toIndex(String square)
+    {
+        if (square == null || square.length() != 2)
+            throw new IllegalArgumentException("Invalid square coordinate: " + square);
+
+        char fileChar = square.charAt(0);
+        char rankChar = square.charAt(1);
+
+        int file = fileChar - 'a';
+        int rank = rankChar - '1';
+
+        if (file < 0 || file >= BOARD_WIDTH || rank < 0 || rank >= BOARD_WIDTH)
+            throw new IllegalArgumentException("Coordinate out of bounds: " + square);
+
+        return toIndex(rank, file);
+    }
+
     public static String toCoordinate(int position)
     {
         char fileChar = (char) ('a' + getFile(position));

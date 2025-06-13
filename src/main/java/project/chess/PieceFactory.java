@@ -10,7 +10,6 @@ public class PieceFactory
         return piece.getType().create(piece.getColour());
     }
 
-
     public static Piece fromFENSymbol(char c)
     {
         Piece.Colour colour = Character.isUpperCase(c) ? Piece.Colour.WHITE : Piece.Colour.BLACK;

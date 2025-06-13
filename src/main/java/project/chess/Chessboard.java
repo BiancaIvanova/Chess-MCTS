@@ -606,4 +606,32 @@ public class Chessboard
     public int getEnPassantTarget() { return enPassantTarget; }
 
     public void setEnPassantTarget(int target) { enPassantTarget = target; }
+
+    public Map<String, List<String>> getAllPieceMovesAsMap()
+    {
+        Map<String, List<String>> moveMap = new HashMap<>();
+
+        for (int position = 0; position < BOARD_SIZE; position++)
+        {
+            Piece piece = getPiece(position);
+            if (piece != null)
+            {
+                List<Integer> moves = piece.generateMoves(position, this);
+                if (!moves.isEmpty())
+                {
+                    String fromCoordinate = BoardUtils.toCoordinate(position);
+                    List<String> toCoordinate = new ArrayList<>();
+
+                    for (int move : moves)
+                    {
+                        toCoordinate.add(BoardUtils.toCoordinate(move));
+                    }
+
+                    moveMap.put(fromCoordinate, toCoordinate);
+                }
+            }
+        }
+
+        return moveMap;
+    }
 }

@@ -1,5 +1,6 @@
 package project.chess.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.*;
 import project.chess.*;
 
@@ -8,11 +9,32 @@ import project.chess.*;
 @RequestMapping("/api")
 public class ChessController
 {
-    private final Chessboard board = new Chessboard();
-
-    @GetMapping("/board")
-    public String getBoardFEN()
+    @GetMapping("/state")
+    public BoardStateDTO getBoardState(HttpSession session)
     {
-        return board.toBasicFEN();
+        // Try to get game from session
+        Game game = (Game) session.getAttribute("game");
+
+        if (game == null)
+        {
+            // First visit to the site: create and store a new game
+            game = new Game();
+            session.setAttribute("game", game);
+        }
+
+        return new BoardStateDTO(game);
+    }
+
+    @PostMapping("/move")
+    public BoardStateDTO makeMove(@RequestParam String move, HttpSession session)
+    {
+        Game game = (Game) session.getAttribute("game");
+        if (game == null)
+        {
+            game = new Game();
+            session.setAttribute("game", game);
+        }
+        game.makeValidMove(move);
+        return new BoardStateDTO(game);
     }
 }

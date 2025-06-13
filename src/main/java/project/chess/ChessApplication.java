@@ -21,6 +21,6 @@ public class ChessApplication
 		Tree<MCTSData> tree = MCTSTreeGenerator.generateTree(game, maxDepth);
 
 		System.out.println("Generated MCTS Tree:");
-		tree.displayTreeStructure();
+		tree.displayTreeStructure(false);
 	}
 }

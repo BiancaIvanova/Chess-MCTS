@@ -538,8 +538,6 @@ public class Chessboard
 
     public boolean isCheckmate(Piece.Colour colour)
     {
-        System.out.println("is in check: " + isInCheck(colour));
-        System.out.println("is empty: " + generateAllLegalMoveBoards(colour).isEmpty());
         return isInCheck(colour) && generateAllLegalMoveBoards(colour).isEmpty();
     }
 

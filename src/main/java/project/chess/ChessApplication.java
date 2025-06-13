@@ -2,6 +2,8 @@ package project.chess;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import project.chess.datastructures.*;
+import project.chess.mcts.*;
+import project.chess.pieces.*;
 
 @SpringBootApplication
 
@@ -11,46 +13,14 @@ public class ChessApplication
 	{
 		//SpringApplication.run(ChessApplication.class, args);
 
-		// Testing the tree data structure
-		Tree<String> tree = new Tree<>();
-		tree.setRoot("A");
+		Game game = new Game();
+		game.importFEN("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1 ");
 
-		Node<String> a = tree.getRoot();
-		Node<String> b = new Node<>("B");
-		Node<String> c = new Node<>("C");
-		Node<String> d = new Node<>("D");
+		int maxDepth = 2;
 
-		a.addChild(b);
-		a.addChild(c);
-		c.addChild(d);
+		Tree<MCTSData> tree = MCTSTreeGenerator.generateTree(game, maxDepth);
 
-		System.out.println("Tree structure:");
+		System.out.println("Generated MCTS Tree:");
 		tree.displayTreeStructure();
-
-		System.out.println("\nPre-order:");
-		tree.displayPreOrder();
-
-		System.out.println("\n\nPost-order:");
-		tree.displayPostOrder();
-
-		System.out.println("\n\nLevel-order:");
-		tree.displayLevelOrder();
-
-		System.out.println("\n\nAs array:");
-		System.out.println(tree.asArray());
-
-//		Chessboard board = new Chessboard();
-//		board.importBasicFEN("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1");
-//
-//		System.out.println("Initial Position:");
-//		board.printBoard();
-//
-//		long  startTime = System.currentTimeMillis();
-//
-//		for (int depth = 1; depth <= 10; depth++) {
-//			long nodes = Perft.perft(board, depth, Piece.Colour.WHITE);
-//			long elapsedMillis = System.currentTimeMillis() - startTime;
-//			System.out.printf("Depth %d: %d nodes  \t\tTime elapsed: %.3f seconds\n", depth, nodes, elapsedMillis / 1000.0);
-//		}
 	}
 }

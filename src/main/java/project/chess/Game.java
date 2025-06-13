@@ -30,6 +30,17 @@ public class Game
         gameOver = false;
     }
 
+    public Game(Game other)
+    {
+        board = new Chessboard(other.board);
+        currentTurn = other.currentTurn;
+        moveHistorySAN = new ArrayList<>(other.moveHistorySAN);
+        halfMoveClock = other.halfMoveClock;
+        fullMoveNumber = other.fullMoveNumber;
+        result = other.result;
+        gameOver = other.gameOver;
+    }
+
     public Chessboard getBoard() { return board; }
 
     public Piece.Colour getCurrentTurn() { return currentTurn; }
@@ -38,7 +49,7 @@ public class Game
      * Attempts to make a legal move, with SAN as input.
      * Returns true if the move was legal and made, false otherwise.
      */
-    public boolean makeMove(String sanMove)
+    public boolean makeValidMove(String sanMove)
     {
         if (gameOver) return false;
 
@@ -68,6 +79,28 @@ public class Game
         }
 
         return false; // Illegal move
+    }
+
+    /**
+     * Will make any move as specified by a SAN chessboard pair, without checking whether it is legal.
+     * Assumes the move is valid, and immediately applies it.
+     */
+    public void makeMove(Pair<String, Chessboard> move)
+    {
+        String sanMove = move.getKey();
+        Chessboard nextBoard = move.getValue();
+
+        board = nextBoard;
+        moveHistorySAN.add(sanMove);
+
+        updateHalfMoveClock(sanMove);
+        if (currentTurn == Piece.Colour.BLACK)
+        {
+            fullMoveNumber++;
+        }
+
+        updateGameStatus();
+        switchTurn();
     }
 
     private void updateHalfMoveClock(String sanMove)

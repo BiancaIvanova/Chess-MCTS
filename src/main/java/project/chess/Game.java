@@ -273,4 +273,11 @@ public class Game
         if (fenSquare.equals("-")) return -1;
         return BoardUtils.toIndex(fenSquare);
     }
+
+    public Piece.Colour getWinner()
+    {
+        if (this.getResult() == GameResult.WHITE_WIN) return Piece.Colour.WHITE;
+        if (this.getResult() == GameResult.BLACK_WIN) return Piece.Colour.BLACK;
+        return null;
+    }
 }

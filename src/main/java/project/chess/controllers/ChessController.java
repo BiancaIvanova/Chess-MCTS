@@ -19,6 +19,7 @@ public class ChessController
         {
             // First visit to the site: create and store a new game
             game = new Game();
+            game.importFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
             session.setAttribute("game", game);
         }
 

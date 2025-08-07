@@ -4,6 +4,16 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * Generic n-ary tree class, using {@link Node}
+ *
+ * @param <T> the type of values stored in the tree nodes.
+ */
+
+/*
+Used to generate a tree of all possible moves from the current board state.
+ */
+
 public class Tree<T>
 {
     private Node<T> root;
@@ -76,6 +86,7 @@ public class Tree<T>
         if (root == null) { return; }
 
         Queue<Node<T>> queue = new LinkedList<>();
+        // TODO implement the queue class properly, not from java utils
         queue.add(root);
 
         while (!queue.isEmpty())

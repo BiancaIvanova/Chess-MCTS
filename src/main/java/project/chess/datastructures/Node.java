@@ -3,6 +3,13 @@ package project.chess.datastructures;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a generic node in an n-ary tree.
+ * This class is used in {@link Tree} to build an n-ary tree structure.
+ *
+ * @param <T> the type of value stored in the node.
+ */
+
 public class Node<T>
 {
     private T value;

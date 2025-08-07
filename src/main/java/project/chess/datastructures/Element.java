@@ -1,5 +1,13 @@
 package project.chess.datastructures;
 
+/**
+ * Represents a generic key-value pair stored in a hash table.
+ * This class is used in {@link HashingDynamic}.
+ *
+ * @param <K> the type of the key.
+ * @param <V> the type of the value.
+ */
+
 class Element<K, V>
 {
     private K key;

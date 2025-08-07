@@ -3,6 +3,19 @@ package project.chess.datastructures;
 import java.util.Iterator;
 import java.util.function.Function;
 
+/**
+ * A dynamically resizing hash table.
+ *
+ * @details
+ * - Uses {@link Element} objects to store key-value pairs and {@code deleted} flags
+ * - Implements {@link IHashDynamic} and {@link Iterable}
+ * - Supports custom hash functions via {@link #setCustomHash(Function)}, else defaults
+ *   to Fibonacci hashing
+ *
+ * @param <K> The type of keys.
+ * @param <V> The type of mapped values.
+ */
+
 public class HashingDynamic<K, V> implements IHashDynamic<K, V>, Iterable<Element<K, V>>
 {
     // Thresholds for resizing the hashtable

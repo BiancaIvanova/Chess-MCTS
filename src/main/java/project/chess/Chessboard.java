@@ -627,6 +627,7 @@ public class Chessboard
                         toCoordinate.add(BoardUtils.toCoordinate(move));
                     }
 
+
                     moveMap.put(fromCoordinate, toCoordinate);
                 }
             }

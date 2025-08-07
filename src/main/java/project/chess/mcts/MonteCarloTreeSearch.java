@@ -5,6 +5,7 @@ import project.chess.Game;
 import project.chess.datastructures.TreeNode;
 import project.chess.datastructures.Pair;
 import project.chess.datastructures.Tree;
+import project.chess.datastructures.LinkedList;
 import project.chess.pieces.Piece;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class MonteCarloTreeSearch
         TreeNode<MCTSData> bestChild = null;
         double bestValue = Double.NEGATIVE_INFINITY;
 
-        for (TreeNode<MCTSData> child : root.getChildren())
+        for (TreeNode<MCTSData> child : root.getChildren().asIterable())
         {
             double winRate = (child.getValue().getVisits() > 0)
                     ? child.getValue().getWins() / child.getValue().getVisits()
@@ -63,7 +64,7 @@ public class MonteCarloTreeSearch
         double bestValue = Double.NEGATIVE_INFINITY;
         TreeNode<MCTSData> selectedNode = null;
 
-        for (TreeNode<MCTSData> child : node.getChildren())
+        for (TreeNode<MCTSData> child : node.getChildren().asIterable())
         {
             double uctValue = uctValue(child, node);
             if (uctValue > bestValue)
@@ -72,7 +73,7 @@ public class MonteCarloTreeSearch
                 selectedNode = child;
             }
         }
-        return (selectedNode != null) ? selectedNode : node.getChildren().getFirst();
+        return (selectedNode != null) ? selectedNode : node.getChildren().get(0);
     }
 
     private double uctValue(TreeNode<MCTSData> child, TreeNode<MCTSData> parent)
@@ -97,13 +98,13 @@ public class MonteCarloTreeSearch
 
         // Pick one unvisited child (or just random if they all have been visited)
         TreeNode<MCTSData> bestNode = null;
-        for (TreeNode<MCTSData> child : node.getChildren())
+        for (TreeNode<MCTSData> child : node.getChildren().asIterable())
         {
             if (child.getValue().getVisits() == 0) return child;
         }
 
         // If all children have been visited, pick a random node
-        List<TreeNode<MCTSData>> children = node.getChildren();
+        LinkedList<TreeNode<MCTSData>> children = node.getChildren();
         return children.get(new Random().nextInt(children.size()));
     }
 

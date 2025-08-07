@@ -1,7 +1,7 @@
 package project.chess.datastructures;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import project.chess.datastructures.LinkedList;
 import java.util.Queue;
 
 /**
@@ -53,13 +53,12 @@ public class Tree<T>
         displayPreOrderRecursive(root);
     }
 
-    private void displayPreOrderRecursive(TreeNode<T> node)
-    {
-        if (node == null) { return; }
+    private void displayPreOrderRecursive(TreeNode<T> node) {
+        if (node == null) return;
 
         System.out.print(node.getValue() + " ");
-        for (TreeNode<T> child : node.getChildren())
-        {
+        for (TreeNode<T> childVal : node.getChildren().asIterable()) {
+            TreeNode<T> child = (TreeNode<T>) childVal;
             displayPreOrderRecursive(child);
         }
     }
@@ -73,7 +72,7 @@ public class Tree<T>
     {
         if (node == null) { return; }
 
-        for (TreeNode<T> child : node.getChildren())
+        for (TreeNode<T> child : node.getChildren().asIterable())
         {
             displayPostOrderRecursive(child);
         }
@@ -81,35 +80,37 @@ public class Tree<T>
     }
 
     // Level order traversal
-    public void displayLevelOrder()
-    {
-        if (root == null) { return; }
+    public void displayLevelOrder() {
+        if (root == null) return;
 
-        Queue<TreeNode<T>> queue = new LinkedList<>();
-        // TODO implement the queue class properly, not from java utils
-        queue.add(root);
+        LinkedList<TreeNode<T>> queue = new LinkedList<>();
+        queue.append(root);
 
-        while (!queue.isEmpty())
-        {
-            TreeNode<T> node = queue.poll();
+        while (!queue.isEmpty()) {
+            TreeNode<T> node = queue.pop();
             System.out.print(node.getValue() + " ");
-            queue.addAll(node.getChildren());
+
+            for (TreeNode<T> childVal : node.getChildren().asIterable()) {
+                TreeNode<T> child = (TreeNode<T>) childVal;
+                queue.append(child);
+            }
         }
+        System.out.println();
     }
 
-    public ArrayList<T> asArray()
+    public T[] asArray()
     {
-        ArrayList<T> list = new ArrayList<>();
+        LinkedList<T> list = new LinkedList<>();
         flattenTree(root, list);
-        return list;
+        return list.asArray();
     }
 
-    private void flattenTree(TreeNode<T> node, ArrayList<T> list)
+    private void flattenTree(TreeNode<T> node, LinkedList<T> list)
     {
         if (node == null) { return; }
 
-        list.add(node.getValue());
-        for (TreeNode<T> child : node.getChildren())
+        list.append(node.getValue());
+        for (TreeNode<T> child : node.getChildren().asIterable())
         {
             flattenTree(child, list);
         }

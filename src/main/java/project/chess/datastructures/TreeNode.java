@@ -1,11 +1,7 @@
 package project.chess.datastructures;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Represents a generic node in an n-ary tree.
- * This class is used in {@link Tree} to build an n-ary tree structure.
+ * Represents a generic node in an n-ary tree using a custom linked list.
  *
  * @param <T> the type of value stored in the node.
  */
@@ -14,12 +10,12 @@ public class TreeNode<T>
 {
     private T value;
     private TreeNode<T> parent;
-    private List<TreeNode<T>> children;
+    private LinkedList<TreeNode<T>> children;
 
     public TreeNode(T value)
     {
         this.value = value;
-        this.children = new ArrayList<>();
+        this.children = new LinkedList<>();
     }
 
     public T getValue() { return value; }
@@ -28,17 +24,19 @@ public class TreeNode<T>
 
     public void setParent(TreeNode<T> p) { parent = p; }
 
-    public List<TreeNode<T>> getChildren() { return children; }
+    public LinkedList<TreeNode<T>> getChildren() { return children; }
 
     public void addChild(TreeNode<T> child)
     {
         child.setParent(this);
-        children.add(child);
+        children.append(child);
     }
 
-    public boolean removeChild(TreeNode<T> child)  { return children.remove(child); }
+    public boolean removeChild(TreeNode<T> child)
+    {
+        return children.remove(child);
+    }
 
     @Override
     public String toString() { return value.toString(); }
-
 }

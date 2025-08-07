@@ -1,5 +1,7 @@
 package project.chess.datastructures;
 
+import java.util.Iterator;
+
 public class LinkedList<T>
 {
     private ListNode<T> head;
@@ -135,6 +137,17 @@ public class LinkedList<T>
         throw new IllegalArgumentException("Value not found");
     }
 
+    public T get(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        ListNode<T> current = head;
+
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+
+        return current.getValue();
+    }
+
     @SuppressWarnings("unchecked")
     public T[] asArray()
     {
@@ -149,5 +162,28 @@ public class LinkedList<T>
         }
 
         return array;
+    }
+
+    public Iterable<T> asIterable() {
+        return new Iterable<T>() {
+            @Override
+            public Iterator<T> iterator() {
+                return new Iterator<T>() {
+                    private ListNode<T> current = head;
+
+                    @Override
+                    public boolean hasNext() {
+                        return current != null;
+                    }
+
+                    @Override
+                    public T next() {
+                        T val = current.getValue();
+                        current = current.getNext();
+                        return val;
+                    }
+                };
+            }
+        };
     }
 }

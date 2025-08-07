@@ -2,7 +2,7 @@ package project.chess.mcts;
 
 import project.chess.Chessboard;
 import project.chess.Game;
-import project.chess.datastructures.Node;
+import project.chess.datastructures.TreeNode;
 import project.chess.datastructures.Pair;
 import project.chess.datastructures.Tree;
 import project.chess.pieces.Piece;
@@ -23,7 +23,7 @@ public class MCTSTreeGenerator
         return tree;
     }
 
-    private static void expandNodeRecursive(Node<MCTSData> node, int maxDepth, int currentDepth)
+    private static void expandNodeRecursive(TreeNode<MCTSData> node, int maxDepth, int currentDepth)
     {
         if (currentDepth >= maxDepth)
             return;
@@ -44,7 +44,7 @@ public class MCTSTreeGenerator
             Piece.Colour nextPlayer = (colourToMove == Piece.Colour.WHITE) ? Piece.Colour.BLACK : Piece.Colour.WHITE;
             MCTSData childData = new MCTSData(newGame, moveSAN, nextPlayer);
 
-            Node<MCTSData> childNode = new Node<>(childData);
+            TreeNode<MCTSData> childNode = new TreeNode<>(childData);
             node.addChild(childNode); // attaches to the correct node in the tree
 
             expandNodeRecursive(childNode, maxDepth, currentDepth + 1);

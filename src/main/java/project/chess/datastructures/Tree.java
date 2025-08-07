@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Generic n-ary tree class, using {@link Node}
+ * Generic n-ary tree class, using {@link TreeNode}
  *
  * @param <T> the type of values stored in the tree nodes.
  */
@@ -16,7 +16,7 @@ Used to generate a tree of all possible moves from the current board state.
 
 public class Tree<T>
 {
-    private Node<T> root;
+    private TreeNode<T> root;
     private int length = 0;
 
     public boolean isEmpty() { return root == null; }
@@ -25,7 +25,7 @@ public class Tree<T>
     {
         if (root == null)
         {
-            root = new Node<>(value);
+            root = new TreeNode<>(value);
             length++;
         }
         else
@@ -34,16 +34,16 @@ public class Tree<T>
         }
     }
 
-    public Node<T> getRoot() { return root; }
+    public TreeNode<T> getRoot() { return root; }
 
-    public void addChild(Node<T> parent, T value)
+    public void addChild(TreeNode<T> parent, T value)
     {
         if (parent == null)
         {
             throw new IllegalArgumentException("getParent node cannot be null.");
         }
 
-        Node<T> child = new Node<>(value);
+        TreeNode<T> child = new TreeNode<>(value);
         parent.addChild(child);
         length++;
     }
@@ -53,12 +53,12 @@ public class Tree<T>
         displayPreOrderRecursive(root);
     }
 
-    private void displayPreOrderRecursive(Node<T> node)
+    private void displayPreOrderRecursive(TreeNode<T> node)
     {
         if (node == null) { return; }
 
         System.out.print(node.getValue() + " ");
-        for (Node<T> child : node.getChildren())
+        for (TreeNode<T> child : node.getChildren())
         {
             displayPreOrderRecursive(child);
         }
@@ -69,11 +69,11 @@ public class Tree<T>
         displayPostOrderRecursive(root);
     }
 
-    private void displayPostOrderRecursive(Node<T> node)
+    private void displayPostOrderRecursive(TreeNode<T> node)
     {
         if (node == null) { return; }
 
-        for (Node<T> child : node.getChildren())
+        for (TreeNode<T> child : node.getChildren())
         {
             displayPostOrderRecursive(child);
         }
@@ -85,13 +85,13 @@ public class Tree<T>
     {
         if (root == null) { return; }
 
-        Queue<Node<T>> queue = new LinkedList<>();
+        Queue<TreeNode<T>> queue = new LinkedList<>();
         // TODO implement the queue class properly, not from java utils
         queue.add(root);
 
         while (!queue.isEmpty())
         {
-            Node<T> node = queue.poll();
+            TreeNode<T> node = queue.poll();
             System.out.print(node.getValue() + " ");
             queue.addAll(node.getChildren());
         }
@@ -104,12 +104,12 @@ public class Tree<T>
         return list;
     }
 
-    private void flattenTree(Node<T> node, ArrayList<T> list)
+    private void flattenTree(TreeNode<T> node, ArrayList<T> list)
     {
         if (node == null) { return; }
 
         list.add(node.getValue());
-        for (Node<T> child : node.getChildren())
+        for (TreeNode<T> child : node.getChildren())
         {
             flattenTree(child, list);
         }
@@ -125,7 +125,7 @@ public class Tree<T>
         displayTreeStructure(true);
     }
 
-    private void displayTreeRecursive(Node<T> node, String indent, boolean isLast, boolean showNulls)
+    private void displayTreeRecursive(TreeNode<T> node, String indent, boolean isLast, boolean showNulls)
     {
         if (node == null) return;
 

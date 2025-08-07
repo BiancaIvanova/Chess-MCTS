@@ -21,20 +21,20 @@ public class Chessboard
     @Getter
     private int enPassantTarget = -1;
 
-    private IHashDynamic<Integer, Piece> boardMap;
+    private IHashTable<Integer, Piece> boardMap;
 
     public EnumSet<CastlingRight> castlingRights;
 
     public Chessboard()
     {
-        boardMap = new HashingDynamic<>();
+        boardMap = new HashTable<>();
         castlingRights = EnumSet.allOf(CastlingRight.class);
     }
 
     // Copy constructor
     public Chessboard(Chessboard other)
     {
-        this.boardMap = new HashingDynamic<>();
+        this.boardMap = new HashTable<>();
 
         for (int position = 0; position < BOARD_SIZE; position++)
         {
@@ -257,7 +257,7 @@ public class Chessboard
 
     public void importBasicFEN(String fen)
     {
-        boardMap = new HashingDynamic<>();
+        boardMap = new HashTable<>();
 
         whiteKingPosition = -1;
         blackKingPosition = -1;

@@ -8,7 +8,7 @@ import java.util.function.Function;
  *
  * @details
  * - Uses {@link Element} objects to store key-value pairs and {@code deleted} flags
- * - Implements {@link IHashDynamic} and {@link Iterable}
+ * - Implements {@link IHashTable} and {@link Iterable}
  * - Supports custom hash functions via {@link #setCustomHash(Function)}, else defaults
  *   to Fibonacci hashing
  *
@@ -16,7 +16,7 @@ import java.util.function.Function;
  * @param <V> The type of mapped values.
  */
 
-public class HashingDynamic<K, V> implements IHashDynamic<K, V>, Iterable<Element<K, V>>
+public class HashTable<K, V> implements IHashTable<K, V>, Iterable<Element<K, V>>
 {
     // Thresholds for resizing the hashtable
     private static final double LOAD_FACTOR_THRESHOLD = 0.75;

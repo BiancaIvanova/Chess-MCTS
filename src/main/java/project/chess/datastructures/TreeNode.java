@@ -10,13 +10,13 @@ import java.util.List;
  * @param <T> the type of value stored in the node.
  */
 
-public class Node<T>
+public class TreeNode<T>
 {
     private T value;
-    private Node<T> parent;
-    private List<Node<T>> children;
+    private TreeNode<T> parent;
+    private List<TreeNode<T>> children;
 
-    public Node(T value)
+    public TreeNode(T value)
     {
         this.value = value;
         this.children = new ArrayList<>();
@@ -24,19 +24,19 @@ public class Node<T>
 
     public T getValue() { return value; }
 
-    public Node<T> getParent() { return parent; }
+    public TreeNode<T> getParent() { return parent; }
 
-    public void setParent(Node<T> p) { parent = p; }
+    public void setParent(TreeNode<T> p) { parent = p; }
 
-    public List<Node<T>> getChildren() { return children; }
+    public List<TreeNode<T>> getChildren() { return children; }
 
-    public void addChild(Node<T> child)
+    public void addChild(TreeNode<T> child)
     {
         child.setParent(this);
         children.add(child);
     }
 
-    public boolean removeChild(Node<T> child)  { return children.remove(child); }
+    public boolean removeChild(TreeNode<T> child)  { return children.remove(child); }
 
     @Override
     public String toString() { return value.toString(); }

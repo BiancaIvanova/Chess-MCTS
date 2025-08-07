@@ -2,10 +2,10 @@ package project.chess.datastructures;
 
 /**
  * Interface defining a dynamically resizing hash table.
- * See {@link HashingDynamic} for details.
+ * See {@link HashTable} for details.
  */
 
-public interface IHashDynamic<K, V> extends Iterable<Element<K, V>>
+public interface IHashTable<K, V> extends Iterable<Element<K, V>>
 {
     int hash(K key);
     V item(K key);

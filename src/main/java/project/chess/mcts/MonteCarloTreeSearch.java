@@ -2,7 +2,7 @@ package project.chess.mcts;
 
 import project.chess.Chessboard;
 import project.chess.Game;
-import project.chess.datastructures.Node;
+import project.chess.datastructures.TreeNode;
 import project.chess.datastructures.Pair;
 import project.chess.datastructures.Tree;
 import project.chess.pieces.Piece;
@@ -16,21 +16,21 @@ public class MonteCarloTreeSearch
 
     public String findBestMove(Tree<MCTSData> tree, int simulations)
     {
-        Node<MCTSData> root = tree.getRoot();
+        TreeNode<MCTSData> root = tree.getRoot();
 
         for (int i = 0; i < simulations; i++)
         {
-            Node<MCTSData> selectedNode = select(root);
-            Node<MCTSData> expandedNode = expand(selectedNode);
+            TreeNode<MCTSData> selectedNode = select(root);
+            TreeNode<MCTSData> expandedNode = expand(selectedNode);
             double result = simulate(expandedNode);
             backpropagate(expandedNode, result);
         }
 
         // Choose best child (highest average win rate)
-        Node<MCTSData> bestChild = null;
+        TreeNode<MCTSData> bestChild = null;
         double bestValue = Double.NEGATIVE_INFINITY;
 
-        for (Node<MCTSData> child : root.getChildren())
+        for (TreeNode<MCTSData> child : root.getChildren())
         {
             double winRate = (child.getValue().getVisits() > 0)
                     ? child.getValue().getWins() / child.getValue().getVisits()
@@ -49,7 +49,7 @@ public class MonteCarloTreeSearch
     /**
      * 1. Selection: Select the next node using UCB1
      */
-    private Node<MCTSData> select(Node<MCTSData> node)
+    private TreeNode<MCTSData> select(TreeNode<MCTSData> node)
     {
         while (!node.getChildren().isEmpty())
         {
@@ -58,12 +58,12 @@ public class MonteCarloTreeSearch
         return node;
     }
 
-    private Node<MCTSData> bestUCTChild(Node<MCTSData> node)
+    private TreeNode<MCTSData> bestUCTChild(TreeNode<MCTSData> node)
     {
         double bestValue = Double.NEGATIVE_INFINITY;
-        Node<MCTSData> selectedNode = null;
+        TreeNode<MCTSData> selectedNode = null;
 
-        for (Node<MCTSData> child : node.getChildren())
+        for (TreeNode<MCTSData> child : node.getChildren())
         {
             double uctValue = uctValue(child, node);
             if (uctValue > bestValue)
@@ -75,7 +75,7 @@ public class MonteCarloTreeSearch
         return (selectedNode != null) ? selectedNode : node.getChildren().getFirst();
     }
 
-    private double uctValue(Node<MCTSData> child, Node<MCTSData> parent)
+    private double uctValue(TreeNode<MCTSData> child, TreeNode<MCTSData> parent)
     {
         // UCT formula:
         int childVisits = child.getValue().getVisits();
@@ -90,27 +90,27 @@ public class MonteCarloTreeSearch
     /**
      * 2. Expansion
      */
-    private Node<MCTSData> expand(Node<MCTSData> node)
+    private TreeNode<MCTSData> expand(TreeNode<MCTSData> node)
     {
         // If at a leaf node, the algorithm is already at max expansion
         if (node.getChildren().isEmpty()) return node;
 
         // Pick one unvisited child (or just random if they all have been visited)
-        Node<MCTSData> bestNode = null;
-        for (Node<MCTSData> child : node.getChildren())
+        TreeNode<MCTSData> bestNode = null;
+        for (TreeNode<MCTSData> child : node.getChildren())
         {
             if (child.getValue().getVisits() == 0) return child;
         }
 
         // If all children have been visited, pick a random node
-        List<Node<MCTSData>> children = node.getChildren();
+        List<TreeNode<MCTSData>> children = node.getChildren();
         return children.get(new Random().nextInt(children.size()));
     }
 
     /**
      * 3. Simulation (random playout from this node)
      */
-    private double simulate(Node<MCTSData> node)
+    private double simulate(TreeNode<MCTSData> node)
     {
         Game game = new Game(node.getValue().getState());
         Piece.Colour playerColour = node.getValue().getPlayerToMove();
@@ -139,7 +139,7 @@ public class MonteCarloTreeSearch
     /**
      * 4. Backpropagation
      */
-    private void backpropagate(Node<MCTSData> node, double result)
+    private void backpropagate(TreeNode<MCTSData> node, double result)
     {
         while (node != null)
         {

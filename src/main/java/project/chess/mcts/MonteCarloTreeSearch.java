@@ -116,9 +116,11 @@ public class MonteCarloTreeSearch
         Game game = new Game(node.getValue().getState());
         Piece.Colour playerColour = node.getValue().getPlayerToMove();
 
+        HeuristicEvaluator evaluator = new HeuristicEvaluator();
+
         // Random playout to the end
         // TODO fix so that it's not random playout, but less computationally intensive
-        int maxPlayoutDepth = 30;
+        int maxPlayoutDepth = 15;
 
         for (int d = 0; d < maxPlayoutDepth && !game.isGameOver(); d++)
         {
@@ -126,15 +128,40 @@ public class MonteCarloTreeSearch
 
             if (legalMoves.isEmpty()) break;
 
-            Pair<String, Chessboard> move = legalMoves.get(new Random().nextInt(legalMoves.size()));
-            game.makeMove(move);
+            Pair<String, Chessboard> bestMove = null;
+            double bestScore = Double.NEGATIVE_INFINITY;
 
+            for (Pair<String, Chessboard> move : legalMoves)
+            {
+                double score = evaluator.evaluate(move.getValue(), playerColour);
+                if (score > bestScore)
+                {
+                    bestScore = score;
+                    bestMove = move;
+                }
+            }
+
+            game.makeMove(bestMove);
+
+            // Switch player colour
             playerColour = (playerColour == Piece.Colour.WHITE) ? Piece.Colour.BLACK : Piece.Colour.WHITE;
         }
 
         // Output score: 1 if our player won, 0 for loss, 0.5 for draw
+        // If game doesn't end, evaluate stronger position
         Piece.Colour winner = game.getWinner();
-        return (winner == node.getValue().getPlayerToMove()) ? 1 : 0;
+
+        if (game.isGameOver())
+        {
+            if (winner == null) return 0.5; // true draw
+            return (winner == node.getValue().getPlayerToMove()) ? 1 : 0;
+        }
+        else
+        {
+            // Max depth reached, game not finished: use heuristic
+            double score = evaluator.evaluate(game.getBoard(), node.getValue().getPlayerToMove());
+            return 0.5 + 0.5 * Math.tanh(score / 10);
+        }
     }
 
     /**

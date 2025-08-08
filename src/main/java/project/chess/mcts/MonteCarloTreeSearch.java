@@ -8,6 +8,7 @@ import project.chess.datastructures.Tree;
 import project.chess.datastructures.LinkedList;
 import project.chess.pieces.Piece;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -15,7 +16,7 @@ public class MonteCarloTreeSearch
 {
     private static final double EXPLORATION_PARAMETER = Math.sqrt(2);
 
-    public String findBestMove(Tree<MCTSData> tree, int simulations)
+    public List<Pair<String, Double>> rankAllMoves(Tree<MCTSData> tree, int simulations)
     {
         TreeNode<MCTSData> root = tree.getRoot();
 
@@ -27,24 +28,27 @@ public class MonteCarloTreeSearch
             backpropagate(expandedNode, result);
         }
 
-        // Choose best child (highest average win rate)
-        TreeNode<MCTSData> bestChild = null;
-        double bestValue = Double.NEGATIVE_INFINITY;
-
+        List<Pair<String, Double>> rankedMoves = new ArrayList<>();
         for (TreeNode<MCTSData> child : root.getChildren().asIterable())
         {
-            double winRate = (child.getValue().getVisits() > 0)
-                    ? child.getValue().getWins() / child.getValue().getVisits()
+            MCTSData data = child.getValue();
+            double winRate = (data.getVisits() > 0)
+                    ? data.getWins() / data.getVisits()
                     : 0;
 
-            if (winRate > bestValue)
-            {
-                bestValue = winRate;
-                bestChild = child;
-            }
+            rankedMoves.add(new Pair<>(data.getMove(), winRate));
         }
 
-        return (bestChild != null ) ? bestChild.getValue().getMove() : null;
+        // TODO use a custom sorting algorithm, not this
+        rankedMoves.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+        return rankedMoves;
+    }
+
+    public String findBestMove(Tree<MCTSData> tree, int simulations)
+    {
+        List<Pair<String, Double>> rankedMoves = rankAllMoves(tree, simulations);
+        return rankedMoves.isEmpty() ? null : rankedMoves.getFirst().getKey();
     }
 
     /**

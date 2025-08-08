@@ -1,7 +1,11 @@
 package project.chess.mcts;
 
 import project.chess.Chessboard;
+import project.chess.PieceType;
 import project.chess.pieces.Piece;
+
+import static project.chess.Chessboard.BOARD_WIDTH;
+import static project.chess.Chessboard.BOARD_SIZE;
 
 public class HeuristicEvaluator
 {
@@ -13,7 +17,7 @@ public class HeuristicEvaluator
     public static final int KING_VALUE = 100;
 
     private static final double MOBILITY_FACTOR = 0.02;
-    private static final int BOARD_SIZE = 64;
+    private static final double PAWN_ADVANCEMENT_FACTOR = 0.1;
 
     public double evaluate(Chessboard board, Piece.Colour playerColour)
     {
@@ -24,8 +28,18 @@ public class HeuristicEvaluator
             Piece piece = board.getPiece(i);
             if (piece == null) continue;
 
-            if (piece.getColour() == playerColour) score += getPieceValue(piece);
-            else score -= getPieceValue(piece);
+            int baseValue = getPieceValue(piece);
+            double pieceScore = baseValue;
+
+            // Pawn advancement bonus
+            if (piece.getType() == PieceType.PAWN) {
+                int rank = i / BOARD_WIDTH; // 0 = top row, 7 = bottom row
+                double progress = getPawnProgress(rank, piece.getColour());
+                pieceScore += progress * PAWN_ADVANCEMENT_FACTOR;
+            }
+
+            if (piece.getColour() == playerColour) score += pieceScore;
+            else score -= pieceScore;
         }
 
         score += mobilityBonus(board, playerColour);
@@ -53,5 +67,11 @@ public class HeuristicEvaluator
             case KING:   return KING_VALUE;
             default:     return 0;
         }
+    }
+
+    private double getPawnProgress(int rank, Piece.Colour colour)
+    {
+        if (colour == Piece.Colour.WHITE) return (6 - rank) / 6.0;
+        else return (rank - 1) / 6.0;
     }
 }

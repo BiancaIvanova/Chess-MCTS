@@ -9,6 +9,7 @@ import static project.chess.Chessboard.BOARD_SIZE;
 
 public class HeuristicEvaluator
 {
+    // Base piece values
     public static final int PAWN_VALUE = 1;
     public static final int KNIGHT_VALUE = 3;
     public static final int BISHOP_VALUE = 3;
@@ -16,6 +17,7 @@ public class HeuristicEvaluator
     public static final int QUEEN_VALUE = 9;
     public static final int KING_VALUE = 100;
 
+    // Weighting constants
     private static final double MOBILITY_FACTOR = 0.02;
     private static final double PAWN_ADVANCEMENT_FACTOR = 0.1;
 
@@ -28,14 +30,12 @@ public class HeuristicEvaluator
             Piece piece = board.getPiece(i);
             if (piece == null) continue;
 
-            int baseValue = getPieceValue(piece);
-            double pieceScore = baseValue;
+            double pieceScore = getPieceValue(piece);
 
             // Pawn advancement bonus
             if (piece.getType() == PieceType.PAWN) {
                 int rank = i / BOARD_WIDTH; // 0 = top row, 7 = bottom row
-                double progress = getPawnProgress(rank, piece.getColour());
-                pieceScore += progress * PAWN_ADVANCEMENT_FACTOR;
+                pieceScore += getPawnProgress(rank, piece.getColour()) * PAWN_ADVANCEMENT_FACTOR;
             }
 
             if (piece.getColour() == playerColour) score += pieceScore;

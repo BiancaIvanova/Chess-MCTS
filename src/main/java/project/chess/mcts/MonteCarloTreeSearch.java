@@ -17,6 +17,8 @@ public class MonteCarloTreeSearch
     private static final int MAX_PLAYOUT_DEPTH = 15;
     private static final double ROLLOUT_TEMPERATURE = 1.0;
 
+    private final Random random = new Random();
+
     public String findBestMove(Tree<MCTSData> tree, int simulations)
     {
         TreeNode<MCTSData> root = tree.getRoot();
@@ -119,7 +121,7 @@ public class MonteCarloTreeSearch
         Piece.Colour playerColour = node.getValue().getPlayerToMove();
 
         HeuristicEvaluator evaluator = new HeuristicEvaluator();
-        Random random = new Random();
+        double r = random.nextDouble();
 
         // Random playout to the end
         // TODO fix so that it's not random playout, but less computationally intensive

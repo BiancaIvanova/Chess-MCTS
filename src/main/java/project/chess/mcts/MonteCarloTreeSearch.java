@@ -14,6 +14,8 @@ import java.util.Random;
 public class MonteCarloTreeSearch
 {
     private static final double EXPLORATION_PARAMETER = Math.sqrt(2);
+    private static final int MAX_PLAYOUT_DEPTH = 15;
+    private static final double ROLLOUT_TEMPERATURE = 1.0;
 
     public String findBestMove(Tree<MCTSData> tree, int simulations)
     {
@@ -109,7 +111,7 @@ public class MonteCarloTreeSearch
     }
 
     /**
-     * 3. Simulation (random playout from this node)
+     * 3. Simulation (pseudorandom playout from this node)
      */
     private double simulate(TreeNode<MCTSData> node)
     {
@@ -117,31 +119,19 @@ public class MonteCarloTreeSearch
         Piece.Colour playerColour = node.getValue().getPlayerToMove();
 
         HeuristicEvaluator evaluator = new HeuristicEvaluator();
+        Random random = new Random();
 
         // Random playout to the end
         // TODO fix so that it's not random playout, but less computationally intensive
-        int maxPlayoutDepth = 15;
 
-        for (int d = 0; d < maxPlayoutDepth && !game.isGameOver(); d++)
+        for (int d = 0; d < MAX_PLAYOUT_DEPTH && !game.isGameOver(); d++)
         {
             List<Pair<String, Chessboard>> legalMoves = game.getBoard().generateAllLegalMoveBoards(playerColour);
-
             if (legalMoves.isEmpty()) break;
 
-            Pair<String, Chessboard> bestMove = null;
-            double bestScore = Double.NEGATIVE_INFINITY;
+            Pair<String, Chessboard> chosenMove = selectMovePseudorandomly(legalMoves, evaluator, playerColour, random);
 
-            for (Pair<String, Chessboard> move : legalMoves)
-            {
-                double score = evaluator.evaluate(move.getValue(), playerColour);
-                if (score > bestScore)
-                {
-                    bestScore = score;
-                    bestMove = move;
-                }
-            }
-
-            game.makeMove(bestMove);
+            game.makeMove(chosenMove);
 
             // Switch player colour
             playerColour = (playerColour == Piece.Colour.WHITE) ? Piece.Colour.BLACK : Piece.Colour.WHITE;
@@ -162,6 +152,34 @@ public class MonteCarloTreeSearch
             double score = evaluator.evaluate(game.getBoard(), node.getValue().getPlayerToMove());
             return 0.5 + 0.5 * Math.tanh(score / 10);
         }
+    }
+
+    private Pair<String, Chessboard> selectMovePseudorandomly(List<Pair<String, Chessboard>> legalMoves, HeuristicEvaluator evaluator, Piece.Colour playerColour, Random random)
+    {
+        double[] weights = new double[legalMoves.size()];
+        double sumWeights = 0;
+
+        // Compute softmax probabilities
+        for (int i = 0; i < legalMoves.size(); i++)
+        {
+            double score = evaluator.evaluate(legalMoves.get(i).getValue(), playerColour);
+            weights[i] = Math.exp(score / ROLLOUT_TEMPERATURE);
+            sumWeights += weights[i];
+        }
+
+        for (int i = 0; i < weights.length; i++) weights[i] /= sumWeights;
+
+        // Roulette-wheel selection
+        double r = random.nextDouble();
+        double cumulative = 0;
+
+        for (int i = 0; i < weights.length; i++)
+        {
+            cumulative += weights[i];
+            if (r < cumulative) return legalMoves.get(i);
+        }
+
+        return legalMoves.getLast();
     }
 
     /**

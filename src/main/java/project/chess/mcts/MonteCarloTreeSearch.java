@@ -8,6 +8,7 @@ import project.chess.datastructures.Tree;
 import project.chess.datastructures.LinkedList;
 import project.chess.pieces.Piece;
 
+import javax.sound.sampled.Line;
 import java.util.List;
 import java.util.Random;
 
@@ -19,7 +20,7 @@ public class MonteCarloTreeSearch
 
     private final Random random = new Random();
 
-    public String findBestMove(Tree<MCTSData> tree, int simulations)
+    public void runSimulations(Tree<MCTSData> tree, int simulations)
     {
         TreeNode<MCTSData> root = tree.getRoot();
 
@@ -30,25 +31,57 @@ public class MonteCarloTreeSearch
             double result = simulate(expandedNode);
             backpropagate(expandedNode, result);
         }
+    }
 
-        // Choose best child (highest average win rate)
-        TreeNode<MCTSData> bestChild = null;
-        double bestValue = Double.NEGATIVE_INFINITY;
+    public LinkedList<String> getRankedMoves(Tree<MCTSData> tree)
+    {
+        TreeNode<MCTSData> root = tree.getRoot();
+        LinkedList<TreeNode<MCTSData>> children = root.getChildren();
+        LinkedList<TreeNode<MCTSData>> sorted = new LinkedList<>();
 
-        for (TreeNode<MCTSData> child : root.getChildren().asIterable())
+        for (TreeNode<MCTSData> child : children.asIterable())
         {
-            double winRate = (child.getValue().getVisits() > 0)
+            double winRateChild = child.getValue().getVisits() > 0
                     ? child.getValue().getWins() / child.getValue().getVisits()
                     : 0;
 
-            if (winRate > bestValue)
+            int index = 0;
+            boolean inserted = false;
+
+            for (TreeNode<MCTSData> s : sorted.asIterable())
             {
-                bestValue = winRate;
-                bestChild = child;
+                double winRateS = s.getValue().getVisits() > 0
+                        ? s.getValue().getWins() / s.getValue().getVisits()
+                        : 0;
+
+                if (winRateChild > winRateS)
+                {
+                    sorted.insert(child, index);
+                    inserted = true;
+                    break;
+                }
+                index++;
             }
+
+            if (!inserted) sorted.append(child);
         }
 
-        return (bestChild != null ) ? bestChild.getValue().getMove() : null;
+        LinkedList<String> rankedMoves = new LinkedList<>();
+        for (TreeNode<MCTSData> node : sorted.asIterable())
+        {
+            rankedMoves.append(node.getValue().getMove());
+        }
+
+        return rankedMoves;
+    }
+
+    public String findBestMove(Tree<MCTSData> tree, int simulations)
+    {
+        runSimulations(tree, simulations);
+
+        LinkedList<String> rankedMoves = getRankedMoves(tree);
+
+        return rankedMoves.isEmpty() ? null : rankedMoves.get(0);
     }
 
     /**

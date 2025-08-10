@@ -1,0 +1,101 @@
+PROJECT LOG
+
+Heuristic notes
+
+    - A completely deterministic heuristic for the MCTS simulation rollout
+      is largely redundant, as it eliminates the advantage of running multiple
+      simulations (ie. 2000 simulations should yield a stronger result than 500)
+
+    - A completely random heuristic however, within the scope of chess games, will
+      almost always result in a draw, due to the weak play of completely random moves
+
+    So, it is best to use a pseudorandom heuristic, that is fundamentally random, but
+    is guided by hardcoded knowledge that teaches it what is a stronger, versus weaker,
+    position
+
+    Heuristics used:
+        - Raw piece value totals, compared to the opposing player
+        - A 'mobility bonus', multiplied by a factor, assessing which player has higher
+          mobility on the board
+        - A 'pawn advancement' bonus, which rewards moves that move pawns closer to the
+          opposing side of the board
+        TODOs:
+        - Reward control of the centre four squares
+        - Penalise moves that place the king in check
+        - TBC
+
+    Using this heuristic, all potential moves are awarded a number
+        In ML, this is known as a 'logit', a raw number from -inf to +inf
+        Usually, in ML, you would apply a sigmoid function to normalise this
+        Graph:
+            https://upload.wikimedia.org/wikipedia/commons/8/88/Logistic-curve.svg
+
+        However, I'm using the hyperbolic tangent function (for not much reason)
+        Graph:
+            https://www.medcalc.org/en/manual/functions/tanh.png
+
+        These two functions are identical to one another, there shouldn't be a
+        difference
+
+    SOFTMAX
+    After all moves are awarded a logit value, I apply softmax to them
+    This essentially maps them all to probabilities, using a temperature value T, where
+    they all should sum to 1:
+        https://en.wikipedia.org/wiki/Softmax_function
+
+        A good analogy for this is that it's like modelling all the logits as a
+        'roulette wheel', where a lower T value increases the likelihood of winning, and
+        a higher T decreases it.
+
+
+First attempt running MCTS
+    First attempt of running the move ranking testcase for the initial
+    starting position (stockfish startpos) yielded the following ranking:
+        Ranked moves (best to worst):
+        1. e3
+        2. Nh3
+        3. d3
+        4. h4
+        5. c3
+        6. e4
+        7. Na3
+        8. d4
+        9. c4
+        10. h3
+        11. a3
+        12. f4
+        13. a4
+        14. b4
+        15. g3
+        16. Nc3
+        17. g4
+        18. b3
+        19. f3
+        20. Nf3
+
+    Which, based on intuition alone, seems very inaccurate, though there
+    are signs that the MCTS is doing something, and could potentially a more
+    accurate approximation than it initially seems.
+
+Algorithm effectiveness evaluation function
+    My research says that some effective evaluation metrics are:
+        - Spearman's Rank Correlation
+        - Kendall's Tau
+        - Top-k accuracy
+
+        Spearman's rank directly compares the two full rankings, with
+        1: perfect agreement, 0: no correlation, and -1: perfectly inverted ranking
+        This compares relative order, and is probably best for overall accuracy.
+
+        Kendall's Tau is generally better when rankings have ties, which mine
+        do not. It measures concordant and discordant pairs between the two rankings.
+
+        Top-k accuracy only considers the top K moves (ie. top 3). It measures if the
+        top K generated moves contain the 'true' best move. Good for evaluating whether
+        it is at least getting the best moves correct, if inaccurate lower down.
+
+    Will most likely use spearman's rank correlation
+
+    Comparing to what we're considering the objective 'best' rankings, as output from
+    Stockfish
+

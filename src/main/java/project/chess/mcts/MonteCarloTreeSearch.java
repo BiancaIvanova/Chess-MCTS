@@ -185,7 +185,7 @@ public class MonteCarloTreeSearch
         {
             // Max depth reached, game not finished: use heuristic
             double score = evaluator.evaluate(game.getBoard(), node.getValue().getPlayerToMove());
-            return 0.5 + 0.5 * Math.tanh(score / 10);
+            return 0.5 + 0.5 * Math.tanh(score / 10); // hyperbolic tangent function
         }
     }
 

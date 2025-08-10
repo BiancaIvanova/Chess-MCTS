@@ -78,7 +78,7 @@ public class MCTSMoveRankingTests {
         long usedMemory = Math.max(0, afterMemory - beforeMemory);
 
         double usedMB = usedMemory / 1024.0 / 1024.0;
-        System.out.printf("Memory used by MCTS: %.4f KB%n", usedMB);
+        System.out.printf("Memory used by MCTS: %.4f MB%n", usedMB);
     }
 
 

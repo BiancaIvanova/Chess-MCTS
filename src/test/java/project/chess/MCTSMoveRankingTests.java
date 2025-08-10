@@ -55,15 +55,15 @@ public class MCTSMoveRankingTests {
 
     /**
      * Run MCTS on a tree, print ranked moves, and display memory usage for MCTS execution.
+     *
+     * HOWEVER this measures the whole JVM heap, so is not completely accurate. It would be better
+     * to use a profiler to measure this instead of Java Runtime.
      */
     private void runMCTSWithMemoryUsage(Tree<MCTSData> tree, int simulations) {
         Runtime runtime = Runtime.getRuntime();
 
-        // Memory before MCTS
-        runtime.gc();
         long beforeMemory = runtime.totalMemory() - runtime.freeMemory();
 
-        // Run MCTS and print ranked moves
         MonteCarloTreeSearch mcts = new MonteCarloTreeSearch();
         mcts.runSimulations(tree, simulations);
 
@@ -74,14 +74,13 @@ public class MCTSMoveRankingTests {
             System.out.printf("%d. %s\n", rank++, move);
         }
 
-        // Memory after MCTS
-        runtime.gc();
         long afterMemory = runtime.totalMemory() - runtime.freeMemory();
-        long usedMemory = afterMemory - beforeMemory;
+        long usedMemory = Math.max(0, afterMemory - beforeMemory);
 
-        double usedKB = usedMemory / 1024.0;
-        System.out.printf("Memory used by MCTS: %.4f KB%n", usedKB);
+        double usedMB = usedMemory / 1024.0 / 1024.0;
+        System.out.printf("Memory used by MCTS: %.4f KB%n", usedMB);
     }
+
 
 
     @Test

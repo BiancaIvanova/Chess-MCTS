@@ -1,5 +1,7 @@
 package project.chess.datastructures;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Iterator;
 
 public class LinkedList<T>
@@ -91,7 +93,7 @@ public class LinkedList<T>
 
     public void insert(T value, int index)
     {
-        if (index < 0 || index > size) throw new IndexOutOfBoundsException();
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
 
         if (index == 0)
         {
@@ -100,7 +102,7 @@ public class LinkedList<T>
             head = newNode;
             if (tail == null) tail = newNode;
         }
-        else if (index == size)
+        else if (index == size - 1)
         {
             append(value);
             return;
@@ -167,7 +169,7 @@ public class LinkedList<T>
     public Iterable<T> asIterable() {
         return new Iterable<T>() {
             @Override
-            public Iterator<T> iterator() {
+            public @NotNull Iterator<T> iterator() {
                 return new Iterator<T>() {
                     private ListNode<T> current = head;
 

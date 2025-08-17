@@ -1,4 +1,6 @@
 package project.chess.model;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +9,7 @@ import project.chess.pieces.Piece;
 
 import java.util.*;
 
-public class Chessboard
+public class Chessboard implements Iterable<Piece>
 {
     public static final int BOARD_WIDTH = 8;
     public static final int BOARD_SIZE = 64;
@@ -634,5 +636,23 @@ public class Chessboard
         }
 
         return moveMap;
+    }
+
+    @Override
+    public Iterator<Piece> iterator() {
+        return new Iterator<>() {
+            private int current = 0;
+
+            @Override
+            public boolean hasNext() {
+                return current < BOARD_SIZE;
+            }
+
+            @Override
+            public Piece next() {
+                if (!hasNext()) throw new NoSuchElementException();
+                return getPiece(current++);
+            }
+        };
     }
 }

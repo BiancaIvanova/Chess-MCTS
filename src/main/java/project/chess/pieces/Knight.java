@@ -1,15 +1,17 @@
 package project.chess.pieces;
-import project.chess.BoardUtils;
-import project.chess.Chessboard;
-import project.chess.PieceType;
+import project.chess.model.BoardUtils;
+import project.chess.model.Chessboard;
+import project.chess.model.PieceType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static project.chess.Chessboard.BOARD_SIZE;
+import static project.chess.model.Chessboard.BOARD_SIZE;
 
 public class Knight extends Piece
 {
+    private static final int[] KNIGHT_DIRECTIONS = {-17, -15, -10, -6, 6, 10, 15, 17};
+
     public Knight(Colour colour) { super(colour); }
     public Knight(Knight other) { super(other); }
 
@@ -20,7 +22,7 @@ public class Knight extends Piece
     public List<Integer> generateMoves(int position, Chessboard board)
     {
         List<Integer> moves = new ArrayList<>();
-        int[] offsets = {-17, -15, -10, -6, 6, 10, 15, 17};
+        int[] offsets = KNIGHT_DIRECTIONS;
 
         int row = BoardUtils.getRank(position);
         int col = BoardUtils.getFile(position);

@@ -1,7 +1,7 @@
 package project.chess.mcts;
 
-import project.chess.Chessboard;
-import project.chess.Game;
+import project.chess.model.Chessboard;
+import project.chess.model.Game;
 import project.chess.datastructures.TreeNode;
 import project.chess.datastructures.Pair;
 import project.chess.datastructures.Tree;

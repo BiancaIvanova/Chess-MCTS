@@ -1,20 +1,22 @@
 package project.chess.pieces;
 
 import lombok.Getter;
-import project.chess.BoardUtils;
-import project.chess.Chessboard;
-import project.chess.PieceFactory;
-import project.chess.PieceType;
+import project.chess.model.BoardUtils;
+import project.chess.model.Chessboard;
+import project.chess.model.PieceFactory;
+import project.chess.model.PieceType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static project.chess.Chessboard.BOARD_SIZE;
-import static project.chess.Chessboard.BOARD_WIDTH;
+import static project.chess.model.Chessboard.BOARD_SIZE;
 
 @Getter
 public abstract class Piece
 {
+    protected static final int[] DIAGONAL_DIRECTIONS = {-9, -7, 7, 9};
+    protected static final int[] HORIZONTAL_DIRECTIONS = {-1, 1};
+
     public enum Colour
     {
         WHITE,
@@ -74,7 +76,7 @@ public abstract class Piece
 
     protected boolean isHorizontal(int dir)
     {
-        return ( dir == -1 || dir == 1);
+        return ( dir == HORIZONTAL_DIRECTIONS[0] || dir == HORIZONTAL_DIRECTIONS[1]);
     }
 
     protected boolean isWrapping(int prevCol, int currentCol, int dir)
@@ -85,7 +87,7 @@ public abstract class Piece
         if (isHorizontal(dir)) return colDelta != 1;
 
         // Diagonals
-        if (dir == -9 || dir == -7 || dir == 7 || dir == 9) return colDelta != 1;
+        for (int d : DIAGONAL_DIRECTIONS) if (dir == d) return colDelta != 1;
 
         // Vertical moves don't wrap by columns
         return false;

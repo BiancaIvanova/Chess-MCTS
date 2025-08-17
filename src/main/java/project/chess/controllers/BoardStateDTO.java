@@ -2,7 +2,7 @@ package project.chess.controllers;
 
 import lombok.Getter;
 import lombok.Setter;
-import project.chess.Game;
+import project.chess.model.Game;
 
 import java.util.List;
 import java.util.Map;

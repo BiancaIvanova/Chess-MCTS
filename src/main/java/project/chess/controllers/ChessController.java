@@ -2,7 +2,7 @@ package project.chess.controllers;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.*;
-import project.chess.*;
+import project.chess.model.Game;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController

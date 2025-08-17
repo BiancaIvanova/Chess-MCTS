@@ -1,6 +1,6 @@
 package project.chess.test;
 
-import project.chess.Chessboard;
+import project.chess.model.Chessboard;
 import project.chess.pieces.Piece;
 
 public class Perft

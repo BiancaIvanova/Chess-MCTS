@@ -1,11 +1,11 @@
 package project.chess.mcts;
 
-import project.chess.Chessboard;
-import project.chess.PieceType;
+import project.chess.model.Chessboard;
+import project.chess.model.PieceType;
 import project.chess.pieces.Piece;
 
-import static project.chess.Chessboard.BOARD_WIDTH;
-import static project.chess.Chessboard.BOARD_SIZE;
+import static project.chess.model.Chessboard.BOARD_WIDTH;
+import static project.chess.model.Chessboard.BOARD_SIZE;
 
 public class HeuristicEvaluator
 {

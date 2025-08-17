@@ -1,4 +1,4 @@
-package project.chess;
+package project.chess.model;
 
 import lombok.Getter;
 import lombok.Setter;

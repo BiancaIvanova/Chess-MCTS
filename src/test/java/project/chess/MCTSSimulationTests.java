@@ -2,6 +2,7 @@ package project.chess;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import project.chess.model.Game;
 import project.chess.mcts.HeuristicEvaluator;
 import project.chess.pieces.Piece;
 

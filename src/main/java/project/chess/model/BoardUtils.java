@@ -1,6 +1,6 @@
-package project.chess;
+package project.chess.model;
 
-import static project.chess.Chessboard.BOARD_WIDTH;
+import static project.chess.model.Chessboard.BOARD_WIDTH;
 
 public class BoardUtils
 {

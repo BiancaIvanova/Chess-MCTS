@@ -1,10 +1,10 @@
 package project.chess.pieces;
 
-import project.chess.BoardUtils;
-import project.chess.Chessboard;
-import project.chess.PieceType;
+import project.chess.model.BoardUtils;
+import project.chess.model.Chessboard;
+import project.chess.model.PieceType;
 
-import static project.chess.Chessboard.BOARD_WIDTH;
+import static project.chess.model.Chessboard.BOARD_WIDTH;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,9 +2,9 @@ package project.chess;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import project.chess.model.Game;
 import project.chess.datastructures.*;
 import project.chess.mcts.*;
-import project.chess.pieces.*;
 
 @SpringBootApplication
 

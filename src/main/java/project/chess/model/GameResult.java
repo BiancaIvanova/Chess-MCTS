@@ -1,4 +1,4 @@
-package project.chess;
+package project.chess.model;
 
 public enum GameResult
 {

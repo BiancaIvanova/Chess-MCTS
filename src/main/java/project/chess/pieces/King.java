@@ -1,9 +1,9 @@
 package project.chess.pieces;
 
-import project.chess.BoardUtils;
-import project.chess.CastlingRight;
-import project.chess.Chessboard;
-import project.chess.PieceType;
+import project.chess.model.BoardUtils;
+import project.chess.model.CastlingRight;
+import project.chess.model.Chessboard;
+import project.chess.model.PieceType;
 
 import java.util.ArrayList;
 import java.util.List;

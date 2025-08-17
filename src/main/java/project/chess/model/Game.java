@@ -1,4 +1,4 @@
-package project.chess;
+package project.chess.model;
 
 import project.chess.datastructures.*;
 import project.chess.pieces.Piece;

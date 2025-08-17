@@ -131,8 +131,11 @@ public class Chessboard implements Iterable<Piece>
             }
 
             Piece rook = getPiece(rookFrom);
-            setPiece(rookTo, rook);
-            setPiece(rookFrom, null);
+            if (rook != null)
+            {
+                setPiece(rookTo, rook);
+                setPiece(rookFrom, null);
+            }
         }
 
         // Handle en passant capture

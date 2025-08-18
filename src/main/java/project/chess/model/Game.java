@@ -1,5 +1,6 @@
 package project.chess.model;
 
+import lombok.Getter;
 import project.chess.datastructure.*;
 import project.chess.piece.Piece;
 
@@ -8,11 +9,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Represents a chess game.
+ * Handles move validation, manages turns, and handles FEN import/export.
+ *
+ * @see Chessboard
+ * @see GameResult
+ */
+
 public class Game
 {
     private Chessboard board;
+    @Getter
     private Piece.Colour currentTurn;
-    private List<String> moveHistorySAN;
+    private final List<String> moveHistorySAN;
     private int halfMoveClock;
     private int fullMoveNumber;
 
@@ -30,6 +40,9 @@ public class Game
         gameOver = false;
     }
 
+    /**
+     * Copy constructor
+     */
     public Game(Game other)
     {
         board = new Chessboard(other.board);
@@ -43,17 +56,16 @@ public class Game
 
     public Chessboard getBoard() { return board; }
 
-    public Piece.Colour getCurrentTurn() { return currentTurn; }
-
     /**
-     * Attempts to make a legal move, with SAN as input.
-     * Returns true if the move was legal and made, false otherwise.
+     * Attempts to make a legal move in SAN notation.
+     * @param sanMove The move in SAN notation.
+     * @return true If the move was legal and made, false otherwise.
      */
     public boolean makeValidMove(String sanMove)
     {
         if (gameOver) return false;
 
-        // Generate legal moves for current player
+        // Generate legal moves for the current player
         List<Pair<String, Chessboard>> legalMoves = board.generateAllLegalMoveBoards(currentTurn);
 
         for (Pair<String, Chessboard> move : legalMoves)
@@ -82,15 +94,14 @@ public class Game
     }
 
     /**
-     * Will make any move as specified by a SAN chessboard pair, without checking whether it is legal.
-     * Assumes the move is valid, and immediately applies it.
+     * Makes a move without validation. Assumes the move is valid.
+     * @param move A {@link Pair} containing SAN notation and resulting {@link Chessboard}.
      */
     public void makeMove(Pair<String, Chessboard> move)
     {
         String sanMove = move.getKey();
-        Chessboard nextBoard = move.getValue();
 
-        board = nextBoard;
+        board = move.getValue();
         moveHistorySAN.add(sanMove);
 
         updateHalfMoveClock(sanMove);
@@ -189,6 +200,11 @@ public class Game
         return fen.toString();
     }
 
+    /**
+     * Imports a game position from FEN notation.
+     * @param fen The FEN string to parse.
+     * @throws IllegalArgumentException If FEN format is invalid.
+     */
     public void importFEN(String fen)
     {
         String[] parts = fen.trim().split("\\s+");
@@ -197,6 +213,7 @@ public class Game
 
         board.importBasicFEN(parts[0]);
 
+        // Parse active colour
         if (parts[1].equalsIgnoreCase("w"))
         {
             currentTurn = Piece.Colour.WHITE;

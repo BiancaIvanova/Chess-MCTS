@@ -5,5 +5,5 @@ public enum GameResult
     ONGOING,
     WHITE_WIN,
     BLACK_WIN,
-    DRAW;
+    DRAW
 }

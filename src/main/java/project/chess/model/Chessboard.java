@@ -9,6 +9,12 @@ import project.chess.piece.Piece;
 
 import java.util.*;
 
+/**
+ * Represents a chess board with pieces and game state.
+ * Handles move generation, validation, and edge-case rules (castling, en passant, promotion).
+ * Uses {@link IHashTable} to store piece positions efficiently.
+ */
+
 public class Chessboard implements Iterable<Piece>
 {
     public static final int BOARD_WIDTH = 8;
@@ -33,7 +39,10 @@ public class Chessboard implements Iterable<Piece>
         castlingRights = EnumSet.allOf(CastlingRight.class);
     }
 
-    // Copy constructor
+    /**
+     * Copy constructor
+     * @param other The board to copy.
+      */
     public Chessboard(Chessboard other)
     {
         this.boardMap = new HashTable<>();
@@ -90,11 +99,20 @@ public class Chessboard implements Iterable<Piece>
         }
     }
 
+    public boolean isOccupied(int position)
+    {
+        return boardMap.contains(position);
+    }
+
+    /**
+     * Executes a move on the board, including castling and en passant.
+     */
     public void move(int from, int to)
     {
         Piece movingPiece = getPiece(from);
         if ( movingPiece == null ) return;
 
+        // Update king position cache
         if (movingPiece.getType() == PieceType.KING)
         {
             if (movingPiece.getColour() == Piece.Colour.WHITE)
@@ -192,34 +210,20 @@ public class Chessboard implements Iterable<Piece>
 
     private void removeCastlingRightsBySquare(int square)
     {
-        if (square == BoardUtils.toIndex(0, 0))
-        {   // a1
-            castlingRights.remove(CastlingRight.WHITE_QUEENSIDE);
-        }
-        else if (square == BoardUtils.toIndex(0, 7))
-        {   // h1
-            castlingRights.remove(CastlingRight.WHITE_KINGSIDE);
-        }
-        else if (square == BoardUtils.toIndex(7, 0))
-        {   // a8
-            castlingRights.remove(CastlingRight.BLACK_QUEENSIDE);
-        }
-        else if (square == BoardUtils.toIndex(7, 7))
-        {   // h8
-            castlingRights.remove(CastlingRight.BLACK_KINGSIDE);
-        }
+        if (square == BoardUtils.toIndex(0, 0)) castlingRights.remove(CastlingRight.WHITE_QUEENSIDE); // a1
+        else if (square == BoardUtils.toIndex(0, 7)) castlingRights.remove(CastlingRight.WHITE_KINGSIDE); // h1
+        else if (square == BoardUtils.toIndex(7, 0)) castlingRights.remove(CastlingRight.BLACK_QUEENSIDE); // a8
+        else if (square == BoardUtils.toIndex(7, 7)) castlingRights.remove(CastlingRight.BLACK_KINGSIDE); // h8
     }
 
-    public boolean isOccupied(int position)
-    {
-        return boardMap.contains(position);
-    }
-
+    /**
+     * Exports the entire board to FEN notation
+     */
     public String toBasicFEN()
     {
         StringBuilder fen = new StringBuilder();
 
-        // Loop from row 7 to 0
+        // Iterate from row 7 to 0
         for (int row = ( BOARD_WIDTH - 1 ); row >= 0; row--)
         {
             int emptyCount = 0;
@@ -244,13 +248,13 @@ public class Chessboard implements Iterable<Piece>
                 }
             }
 
-            // If the last squares in row are empty, add the count
+            // If the last squares in the row are empty, add the count
             if (emptyCount > 0)
             {
                 fen.append(emptyCount);
             }
 
-            // Separate ranks by '/' except after last rank
+            // Separate ranks by '/' except after the last rank
             if (row > 0)
             {
                 fen.append('/');
@@ -260,6 +264,9 @@ public class Chessboard implements Iterable<Piece>
         return fen.toString();
     }
 
+    /**
+     * Imports a board position from FEN notation.
+     */
     public void importBasicFEN(String fen)
     {
         boardMap = new HashTable<>();
@@ -325,6 +332,10 @@ public class Chessboard implements Iterable<Piece>
         System.out.println("    a b c d e f g h");
     }
 
+    /**
+     * Generates all pseudolegal moves (may leave king in check).
+     * @return list of {@link Pair} with SAN notation and resulting {@link Chessboard}
+     */
     public List<Pair<String, Chessboard>> generateAllPseudolegalMoveBoards(Piece.Colour colour)
     {
         List<Pair<String, Chessboard>> legalMovesBoards = new ArrayList<>();
@@ -362,7 +373,7 @@ public class Chessboard implements Iterable<Piece>
                     {
                         if (needsDisambiguation(originPos, targetPos, piece))
                         {
-                            disambiguation = getDisambiguation(originPos, targetPos, piece);
+                            disambiguation = getDisambiguation(originPos, piece);
                         }
                     }
 
@@ -428,6 +439,10 @@ public class Chessboard implements Iterable<Piece>
         return legalMovesSAN;
     }
 
+    /**
+     * Generates all legal moves (excludes moves that leave king in check).
+     * @return list of {@link Pair} with SAN notation and resulting {@link Chessboard}
+     */
     public List<Pair<String, Chessboard>> generateAllLegalMoveBoards(Piece.Colour colour)
     {
         List<Pair<String, Chessboard>> pseudolegalMovePairs = generateAllPseudolegalMoveBoards(colour);
@@ -459,6 +474,9 @@ public class Chessboard implements Iterable<Piece>
         return legalMovesSAN;
     }
 
+    /**
+     * Generates all promotion move variations (Q, R, B, N) for a pawn reaching the back rank.
+     */
     private List<Pair<String, Chessboard>> generatePromotionMoves(int originPos, int targetPos, Piece movingPawn, boolean isCapture)
     {
         List<Pair<String, Chessboard>> promotionMoves = new ArrayList<>();
@@ -504,6 +522,9 @@ public class Chessboard implements Iterable<Piece>
         return (colour == Piece.Colour.WHITE) ? whiteKingPosition : blackKingPosition;
     }
 
+    /**
+     * Recalculates king positions by scanning the board.
+     */
     public void recalculateKingPositions()
     {
         whiteKingPosition = -1;
@@ -551,6 +572,9 @@ public class Chessboard implements Iterable<Piece>
         return !isInCheck(colour) && generateAllLegalMoveBoards(colour).isEmpty();
     }
 
+    /**
+     * Checks if multiple pieces of the same type can reach the target square.
+     */
     private boolean needsDisambiguation(int originPos, int targetPos, Piece piece)
     {
         for (int pos = 0; pos < BOARD_SIZE; pos++)
@@ -567,7 +591,10 @@ public class Chessboard implements Iterable<Piece>
         return false;
     }
 
-    private String getDisambiguation(int originPos, int targetPos, Piece piece)
+    /**
+     * Returns disambiguation string for SAN (file, rank, or full coordinate).
+     */
+    private String getDisambiguation(int originPos, Piece piece)
     {
         int originFile = BoardUtils.getFile(originPos);
         int originRank = BoardUtils.getRank(originPos);
@@ -595,6 +622,7 @@ public class Chessboard implements Iterable<Piece>
             if ((BoardUtils.getRank(pos)) == originRank) sameRank = true;
         }
 
+        // Prefer file, then rank, then full coordinate
         if (!sameFile) return "" + (char)('a' + originFile);
         if (!sameRank) return "" + (char)('1' + originRank);
         return BoardUtils.toCoordinate(originPos);
@@ -607,10 +635,6 @@ public class Chessboard implements Iterable<Piece>
         castlingRights.clear();
         castlingRights.addAll(rights);
     }
-
-    public int getEnPassantTarget() { return enPassantTarget; }
-
-    public void setEnPassantTarget(int target) { enPassantTarget = target; }
 
     public Map<String, List<String>> getAllPieceMovesAsMap()
     {
@@ -641,6 +665,10 @@ public class Chessboard implements Iterable<Piece>
         return moveMap;
     }
 
+    /**
+     * Returns an iterator that traverses all 64 squares of the board.
+     * Returns the piece at each square, or null for empty squares.
+     */
     @Override
     public Iterator<Piece> iterator() {
         return new Iterator<>() {

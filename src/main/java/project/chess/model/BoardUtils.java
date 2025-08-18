@@ -2,6 +2,11 @@ package project.chess.model;
 
 import static project.chess.model.Chessboard.BOARD_WIDTH;
 
+/**
+ * Utility class for converting between different chess board coordinate representations:
+ * Index (0-63); rank/file (0-7), and algebraic notation (e.g., "e4").
+ */
+
 public class BoardUtils
 {
     /**
@@ -29,7 +34,7 @@ public class BoardUtils
     }
 
     /**
-     * Converts a square coordinate in algebraic notation (ie. e5) into an index from 0-63.
+     * Converts a square coordinate in algebraic notation (i.e. e5) into an index from 0-63.
      */
     public static int toIndex(String square)
     {
@@ -49,7 +54,7 @@ public class BoardUtils
     }
 
     /**
-     * Converts an index from 0-63 into a square coordinate in algebraic notation (ie. e5)
+     * Converts an index from 0-63 into a square coordinate in algebraic notation (i.e. e5)
      */
     public static String toCoordinate(int position)
     {

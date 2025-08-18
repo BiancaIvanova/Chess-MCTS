@@ -8,12 +8,6 @@ package project.chess.datastructure;
  * @param <V> the type of the second element.
  */
 
-/*
-Used to store <String, Chessboard> pairs, representing a move.
-- String is the text description of the move, written in SAN
-- Chessboard is the updated Chessboard state after the move
- */
-
 public class Pair<K, V>
 {
     private final K key;

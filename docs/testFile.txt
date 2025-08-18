@@ -1,0 +1,72 @@
+Memory Layout:
+
+Node A @ 0x100
+├─ value: "A"
+├─ parent: null
+└─ children: 0x200 ───┐
+                      │
+LinkedList @ 0x200    │
+├─ head → ListNode    │
+│   ├─ data: 0x300 ───┼─→ Node B @ 0x300
+│   ├─ prev: null     │   ├─ value: "B"
+│   └─ next: 0x210    │   ├─ parent: 0x100 ─┐
+│                     │   └─ children: ...   │
+├─ ListNode @ 0x210   │                      │
+│   ├─ data: 0x400 ───┼─→ Node C @ 0x400    │
+│   ├─ prev: 0x200    │   ├─ value: "C"     │
+│   └─ next: 0x220    │   ├─ parent: 0x100 ─┤
+│                     │   └─ children: []    │
+└─ ListNode @ 0x220   │                      │
+    ├─ data: 0x500 ───┼─→ Node D @ 0x500    │
+    ├─ prev: 0x210    │   ├─ value: "D"     │
+    └─ next: null     │   ├─ parent: 0x100 ─┤
+                      │   └─ children: []    │
+                      │                      │
+                      └──────────────────────┘
+                      (parent refs point back up)
+
+
+Tree Structure View (logical):
+              A
+            / | \
+           B  C  D
+          /|
+         E F
+
+Implementation View (with all references):
+
+┌─────────────────────┐
+│   TreeNode: A       │
+│  ┌─────────────┐    │
+│  │ value: "A"  │    │
+│  │ parent: null│    │  (root has no parent)
+│  │ children: ──┼────┼──> LinkedList: [B] ⇄ [C] ⇄ [D]
+│  └─────────────┘    │         │       │       │
+└─────────────────────┘         │       │       │
+                                ↓       ↓       ↓
+        ┌───────────────────────┘       │       │
+        │                               │       │
+        ↓                               ↓       ↓
+┌─────────────────┐      ┌─────────────────┐  ┌─────────────────┐
+│  TreeNode: B    │      │  TreeNode: C    │  │  TreeNode: D    │
+│ ┌─────────────┐ │      │ ┌─────────────┐ │  │ ┌─────────────┐ │
+│ │ value: "B"  │ │      │ │ value: "C"  │ │  │ │ value: "D"  │ │
+│ │ parent: ────┼─┼──┐   │ │ parent: ────┼─┼──┼─┤ parent: ────┼─┼──┐
+│ │ children:── │ │  │   │ │ children:[] │ │  │ │ children:[] │ │  │
+│ └─────────────┘ │  │   │ └─────────────┘ │  │ └─────────────┘ │  │
+└─────────────────┘  │   └─────────────────┘  └─────────────────┘  │
+        │            │            │                     │            │
+        ↓            │            │                     │            │
+LinkedList: [E]⇄[F]  │           └──────────────────────┴────────────┘
+    │       │        │                     (all point back to A)
+    ↓       ↓        │
+┌────────┐ ┌────────┤
+│Node: E │ │Node: F │
+│┌──────┐│ │┌──────┐│
+││value ││ ││value ││
+││parent├┼─┘│parent├┼─┐  (both point back to B)
+││child ││  │child ││ │
+│└──────┘│  └──────┘│ │
+└────────┘  └───────┘ │
+    ↑               ↑ │
+    └───────────────┴─┘

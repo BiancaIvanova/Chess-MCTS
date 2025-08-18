@@ -1,8 +1,7 @@
 package project.chess.datastructure;
 
 /**
- * Represents a generic node in an n-ary tree using a custom linked list.
- *
+ * Represents a generic node in an n-ary tree using {@link LinkedList}.
  * @param <T> the type of value stored in the node.
  */
 
@@ -26,6 +25,10 @@ public class TreeNode<T>
 
     public LinkedList<TreeNode<T>> getChildren() { return children; }
 
+    /**
+     * Adds a child node, and ensures that the child and parent are linked in both directions.
+     * @param child
+     */
     public void addChild(TreeNode<T> child)
     {
         child.setParent(this);

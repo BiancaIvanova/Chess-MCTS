@@ -308,6 +308,10 @@ public class HashTable<K, V> implements IHashTable<K, V>, Iterable<Element<K, V>
         };
     }
 
+    /**
+     * Returns an array of all the values stored in the hashtable.
+     * @return An array of all the values stored in the hashtable.
+     */
     public V[] asArray()
     {
         @SuppressWarnings("unchecked")
@@ -315,6 +319,7 @@ public class HashTable<K, V> implements IHashTable<K, V>, Iterable<Element<K, V>
 
         int index = 0;
 
+        // Iterate through the table and add all values not marked as deleted
         for (Element<K, V> element : table)
         {
             if (element != null && !element.Deleted())

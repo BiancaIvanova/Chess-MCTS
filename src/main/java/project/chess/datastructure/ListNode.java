@@ -1,7 +1,7 @@
 package project.chess.datastructure;
 
 /**
- * Represents a node in a doubly linked list.
+ * Represents a node in a doubly linked list: {@link LinkedList}.
  * @param <T> The type of value stored in this node.
  */
 

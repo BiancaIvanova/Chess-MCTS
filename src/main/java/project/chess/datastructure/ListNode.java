@@ -1,4 +1,4 @@
-package project.chess.datastructures;
+package project.chess.datastructure;
 
 /**
  * Represents a node in a doubly linked list.

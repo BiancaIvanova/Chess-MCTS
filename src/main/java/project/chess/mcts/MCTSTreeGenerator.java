@@ -2,10 +2,10 @@ package project.chess.mcts;
 
 import project.chess.model.Chessboard;
 import project.chess.model.Game;
-import project.chess.datastructures.TreeNode;
-import project.chess.datastructures.Pair;
-import project.chess.datastructures.Tree;
-import project.chess.pieces.Piece;
+import project.chess.datastructure.TreeNode;
+import project.chess.datastructure.Pair;
+import project.chess.datastructure.Tree;
+import project.chess.piece.Piece;
 
 import java.util.List;
 

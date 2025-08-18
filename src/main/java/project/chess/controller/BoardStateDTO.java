@@ -1,4 +1,4 @@
-package project.chess.controllers;
+package project.chess.controller;
 
 import lombok.Getter;
 import lombok.Setter;

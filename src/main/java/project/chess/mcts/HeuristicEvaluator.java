@@ -2,7 +2,7 @@ package project.chess.mcts;
 
 import project.chess.model.Chessboard;
 import project.chess.model.PieceType;
-import project.chess.pieces.Piece;
+import project.chess.piece.Piece;
 
 import static project.chess.model.Chessboard.BOARD_WIDTH;
 import static project.chess.model.Chessboard.BOARD_SIZE;

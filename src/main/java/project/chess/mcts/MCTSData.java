@@ -1,7 +1,7 @@
 package project.chess.mcts;
 
 import project.chess.model.Game;
-import project.chess.pieces.Piece;
+import project.chess.piece.Piece;
 
 public class MCTSData
 {

@@ -2,7 +2,7 @@ package project.chess;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import project.chess.pieces.Piece;
+import project.chess.piece.Piece;
 import project.chess.test.Perft;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

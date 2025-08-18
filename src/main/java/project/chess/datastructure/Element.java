@@ -1,4 +1,4 @@
-package project.chess.datastructures;
+package project.chess.datastructure;
 
 /**
  * Represents a generic key-value pair stored in a hash table.

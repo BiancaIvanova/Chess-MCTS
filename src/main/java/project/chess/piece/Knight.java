@@ -1,4 +1,4 @@
-package project.chess.pieces;
+package project.chess.piece;
 import project.chess.model.BoardUtils;
 import project.chess.model.Chessboard;
 import project.chess.model.PieceType;

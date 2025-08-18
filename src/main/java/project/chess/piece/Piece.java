@@ -1,4 +1,4 @@
-package project.chess.pieces;
+package project.chess.piece;
 
 import lombok.Getter;
 import project.chess.model.BoardUtils;

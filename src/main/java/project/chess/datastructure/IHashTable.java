@@ -1,4 +1,4 @@
-package project.chess.datastructures;
+package project.chess.datastructure;
 
 /**
  * Interface defining a dynamically resizing hash table.

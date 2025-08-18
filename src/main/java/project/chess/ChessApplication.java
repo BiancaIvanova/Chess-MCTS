@@ -2,11 +2,9 @@ package project.chess;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import project.chess.datastructures.*;
-import project.chess.mcts.*;
 import project.chess.model.*;
 import project.chess.modelanalysis.*;
-import project.chess.pieces.Piece;
+import project.chess.piece.Piece;
 
 @SpringBootApplication
 
@@ -17,13 +15,11 @@ public class ChessApplication
 		SpringApplication.run(ChessApplication.class, args);
 
 		Game game = new Game();
-		game.importFEN("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1 ");
+		game.importFEN("8/1p1R4/8/8/8/8/K3R3/2k4n w - - 0 1 ");
 
-        double[] comWhiteUniform = BoardCentreOfMass.computeCOM(game.getBoard(), Piece.Colour.WHITE);
-        double[] comBlackMaterial = BoardCentreOfMass.computeCOM(game.getBoard(), Piece.Colour.BLACK, true);
+        double load = CognitiveLoad.computeLoad(game.getBoard(), Piece.Colour.WHITE);
 
-        System.out.println("White COM: " + comWhiteUniform[0] + ", " + comWhiteUniform[1]);
-        System.out.println("Black COM: " + comBlackMaterial[0] + ", " + comBlackMaterial[1]);
+        System.out.println(load);
 
         /*
 		int maxDepth = 3;

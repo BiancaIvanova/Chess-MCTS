@@ -3,9 +3,9 @@ package project.chess;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import project.chess.model.Game;
-import project.chess.datastructures.LinkedList;
-import project.chess.datastructures.Tree;
-import project.chess.datastructures.TreeNode;
+import project.chess.datastructure.LinkedList;
+import project.chess.datastructure.Tree;
+import project.chess.datastructure.TreeNode;
 import project.chess.mcts.MCTSData;
 import project.chess.mcts.MonteCarloTreeSearch;
 

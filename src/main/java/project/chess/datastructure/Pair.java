@@ -1,4 +1,4 @@
-package project.chess.datastructures;
+package project.chess.datastructure;
 
 /**
  * Generic container class that holds a pair of related values.

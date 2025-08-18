@@ -1,7 +1,7 @@
 package project.chess.model;
 
-import project.chess.datastructures.*;
-import project.chess.pieces.Piece;
+import project.chess.datastructure.*;
+import project.chess.piece.Piece;
 
 import java.util.ArrayList;
 import java.util.HashSet;

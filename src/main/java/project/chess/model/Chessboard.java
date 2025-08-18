@@ -4,8 +4,8 @@ import java.util.NoSuchElementException;
 
 import lombok.Getter;
 import lombok.Setter;
-import project.chess.datastructures.*;
-import project.chess.pieces.Piece;
+import project.chess.datastructure.*;
+import project.chess.piece.Piece;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package project.chess.datastructures;
+package project.chess.datastructure;
 
 /**
  * Represents a generic node in an n-ary tree using a custom linked list.

@@ -1,4 +1,4 @@
-package project.chess.datastructures;
+package project.chess.datastructure;
 
 import java.util.Iterator;
 import java.util.function.Function;

@@ -1,4 +1,4 @@
-package project.chess.controllers;
+package project.chess.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.*;

@@ -1,8 +1,4 @@
-package project.chess.datastructures;
-
-import java.util.ArrayList;
-import project.chess.datastructures.LinkedList;
-import java.util.Queue;
+package project.chess.datastructure;
 
 /**
  * Generic n-ary tree class, using {@link TreeNode}

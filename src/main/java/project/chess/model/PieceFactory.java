@@ -1,6 +1,6 @@
 package project.chess.model;
 
-import project.chess.pieces.Piece;
+import project.chess.piece.Piece;
 
 public class PieceFactory
 {

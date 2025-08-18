@@ -1,7 +1,7 @@
 package project.chess.model;
 
 import lombok.Getter;
-import project.chess.pieces.*;
+import project.chess.piece.*;
 
 import java.util.function.Function;
 

@@ -20,7 +20,7 @@ public abstract class Piece
     public enum Colour
     {
         WHITE,
-        BLACK;
+        BLACK
     }
 
     protected final Colour colour;
@@ -105,7 +105,7 @@ public abstract class Piece
     public String toAlgebraicNotation()
     {
         return PieceFactory.toAlgebraicNotation(this);
-    };
+    }
 
     @Override
     public String toString() {return this.toFENSymbol() + ""; }

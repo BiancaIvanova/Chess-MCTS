@@ -14,7 +14,7 @@ import java.util.List;
 - Pawn can move one square forward if it's empty
 - Pawn can move two squares forward if it's on its starting rank and both squares are empty
 - Pawn can capture diagonally one square forward-left or forward-right if there is an opponent piece
-- Additionally, en passant and promotion exists
+- Additionally, en passant and promotion exist
  */
 
 public class Pawn extends Piece

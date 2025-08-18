@@ -32,14 +32,14 @@ public class CognitiveLoad {
         return Math.min(100, rawScore * 100); // scale to 0-100
     }
 
-    // How many legal moves exist
+    // The number of legal moves that exist
     private static double computeBranchingFactor(Chessboard board, Piece.Colour colour)
     {
         List<?> legalMoves = board.generateAllLegalMoveBoards(colour);
         return Math.tanh(legalMoves.size() / 40.0); // normalize roughly to 0-1
     }
 
-    // How many forcing moves exist
+    // The number of forcing moves that exist
     private static double computeForcingMoves(Chessboard board, Piece.Colour colour) {
         List<String> moves = board.generateAllLegalMoveSAN(colour);
         int forcingCount = 0;

@@ -122,7 +122,7 @@ public class CognitiveLoad {
                 Piece target = board.getPiece(sq);
                 if (target == null) continue;
                 if (target.getColour() == piece.getColour()) {
-                    if (ownFound) break; // multiple own → no pin/skewer
+                    if (ownFound) break; // multiple own -> no pin/skewer
                     ownFound = true;
                 } else {
                     if (enemyFound) {

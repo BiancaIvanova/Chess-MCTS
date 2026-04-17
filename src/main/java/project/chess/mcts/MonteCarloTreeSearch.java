@@ -150,13 +150,10 @@ public class MonteCarloTreeSearch
     private double simulate(TreeNode<MCTSData> node)
     {
         Game game = new Game(node.getValue().getState());
-        Piece.Colour playerColour = node.getValue().getPlayerToMove();
+        Piece.Colour playerColour = game.getCurrentTurn();
+        Piece.Colour rootPlayer = getRootPlayer(node);
 
         HeuristicEvaluator evaluator = new HeuristicEvaluator();
-        double r = random.nextDouble();
-
-        // Random playout to the end
-        // TODO fix so that it's not random playout, but less computationally intensive
 
         for (int d = 0; d < MAX_PLAYOUT_DEPTH && !game.isGameOver(); d++)
         {
@@ -166,26 +163,31 @@ public class MonteCarloTreeSearch
             Pair<String, Chessboard> chosenMove = selectMovePseudorandomly(legalMoves, evaluator, playerColour, random);
 
             game.makeMove(chosenMove);
-
-            // Switch player colour
-            playerColour = (playerColour == Piece.Colour.WHITE) ? Piece.Colour.BLACK : Piece.Colour.WHITE;
+            playerColour = game.getCurrentTurn();
         }
 
-        // Output score: 1 if our player won, 0 for loss, 0.5 for draw
-        // If game doesn't end, evaluate stronger position
         Piece.Colour winner = game.getWinner();
 
         if (game.isGameOver())
         {
-            if (winner == null) return 0.5; // true draw
-            return (winner == node.getValue().getPlayerToMove()) ? 1 : 0;
+            if (winner == null) return 0.5;
+            return winner == rootPlayer ? 1 : 0;
         }
-        else
+
+        double score = evaluator.evaluate(game.getBoard(), rootPlayer);
+        return 0.5 + 0.5 * Math.tanh(score / 10);
+    }
+
+    private Piece.Colour getRootPlayer(TreeNode<MCTSData> node)
+    {
+        TreeNode<MCTSData> current = node;
+
+        while (current.getParent() != null)
         {
-            // Max depth reached, game not finished: use heuristic
-            double score = evaluator.evaluate(game.getBoard(), node.getValue().getPlayerToMove());
-            return 0.5 + 0.5 * Math.tanh(score / 10); // hyperbolic tangent function
+            current = current.getParent();
         }
+
+        return current.getValue().getPlayerToMove();
     }
 
     private Pair<String, Chessboard> selectMovePseudorandomly(List<Pair<String, Chessboard>> legalMoves, HeuristicEvaluator evaluator, Piece.Colour playerColour, Random random)

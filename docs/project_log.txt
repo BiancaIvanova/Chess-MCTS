@@ -74,7 +74,7 @@ First attempt running MCTS
         20. Nf3
 
     Which, based on intuition alone, seems very inaccurate, though there
-    are signs that the MCTS is doing something, and could potentially a more
+    are signs that the MCTS is doing something, and could potentially be a more
     accurate approximation than it initially seems.
 
 Algorithm effectiveness evaluation function

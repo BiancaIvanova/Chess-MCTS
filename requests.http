@@ -1,0 +1,16 @@
+# @timeout 60000
+
+GET http://localhost:8080/api/state
+
+###
+
+POST http://localhost:8080/api/move
+Content-Type: application/json
+
+{
+  "move": "e4"
+}
+
+###
+
+GET http://localhost:8080/api/evaluation/13

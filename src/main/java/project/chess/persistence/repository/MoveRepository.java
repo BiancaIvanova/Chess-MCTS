@@ -75,4 +75,31 @@ public class MoveRepository
             return move;
         }, gameId);
     }
+
+    public Integer countMoves()
+    {
+        String sql = """
+            SELECT COUNT(*)
+            FROM moves
+            """;
+
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    public Integer getAverageMoveTimeMs()
+    {
+        String sql = """
+            SELECT AVG(time_taken_ms)
+            FROM moves
+            """;
+
+        Double result = jdbcTemplate.queryForObject(sql, Double.class);
+
+        if (result == null)
+        {
+            return null;
+        }
+
+        return result.intValue();
+    }
 }

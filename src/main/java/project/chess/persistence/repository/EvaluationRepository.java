@@ -4,6 +4,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import project.chess.persistence.entity.EvaluationEntity;
 
+import java.util.List;
+
 @Repository
 public class EvaluationRepository
 {
@@ -71,5 +73,41 @@ public class EvaluationRepository
         }, moveId);
 
         return results.isEmpty() ? null : results.get(0);
+    }
+
+    public Double getGlobalAverageEvaluationScore()
+    {
+        String sql = """
+            SELECT AVG(evaluation_score)
+            FROM evaluations
+            """;
+
+        return jdbcTemplate.queryForObject(sql, Double.class);
+    }
+
+    public String getMostCommonEvaluationLabel()
+    {
+        String sql = """
+            SELECT er.eval_name
+            FROM evaluations e
+            JOIN evaluation_ranges er
+                ON e.eval_range_id = er.eval_range_id
+            GROUP BY er.eval_name
+            ORDER BY COUNT(*) DESC
+            LIMIT 1
+            """;
+
+        List<String> results = jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) ->
+                        resultSet.getString("eval_name")
+        );
+
+        if (results.isEmpty())
+        {
+            return null;
+        }
+
+        return results.get(0);
     }
 }

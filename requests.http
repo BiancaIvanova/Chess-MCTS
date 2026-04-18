@@ -1,6 +1,1 @@
-POST http://localhost:8080/api/analysis/import-fen
-Content-Type: application/json
-
-{
-  "fen": "invalidfen"
-}
+GET http://localhost:8080/api/statistics/recent-games

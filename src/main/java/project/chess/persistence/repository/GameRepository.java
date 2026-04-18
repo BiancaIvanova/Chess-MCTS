@@ -8,6 +8,7 @@ import project.chess.persistence.entity.GameEntity;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class GameRepository
@@ -95,5 +96,82 @@ public class GameRepository
                 """;
 
         jdbcTemplate.update(sql, gameId);
+    }
+
+    public Integer countGames()
+    {
+        String sql = """
+            SELECT COUNT(*)
+            FROM games
+            """;
+
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    public Integer countCompletedGames()
+    {
+        String sql = """
+            SELECT COUNT(*)
+            FROM games
+            WHERE completed = TRUE
+            """;
+
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    public List<GameEntity> findRecentGames()
+    {
+        String sql = """
+            SELECT *
+            FROM games
+            ORDER BY start_time_utc DESC
+            LIMIT 10
+            """;
+
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> {
+                    GameEntity game = new GameEntity();
+
+                    game.setGameId(resultSet.getInt("game_id"));
+                    game.setStartedAt(
+                            resultSet.getTimestamp("start_time_utc")
+                                    .toLocalDateTime()
+                    );
+
+                    if (resultSet.getTimestamp("end_time_utc") != null)
+                    {
+                        game.setEndedAt(
+                                resultSet.getTimestamp("end_time_utc")
+                                        .toLocalDateTime()
+                        );
+                    }
+
+                    game.setResult(resultSet.getString("result"));
+                    game.setGameMode(resultSet.getString("game_mode"));
+                    game.setUserColour(resultSet.getString("user_colour"));
+                    game.setCompleted(resultSet.getBoolean("completed"));
+
+                    if (resultSet.getBigDecimal("average_move_quality") != null)
+                    {
+                        game.setAverageMoveQuality(
+                                resultSet.getBigDecimal("average_move_quality")
+                        );
+                    }
+
+                    if (resultSet.getObject("average_move_time_ms") != null)
+                    {
+                        game.setAverageMoveTimeMs(
+                                resultSet.getInt("average_move_time_ms")
+                        );
+                    }
+
+                    game.setTotalUserTimeMs(
+                            resultSet.getInt("total_user_time_ms")
+                    );
+
+                    return game;
+                }
+        );
     }
 }

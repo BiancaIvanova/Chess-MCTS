@@ -56,6 +56,10 @@ public class GameService
     @Transactional
     public BoardStateDTO startGame(StartGameRequest request, HttpSession session)
     {
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+
+        gameRepository.abandonOngoingGames(now);
+
         Game game = new Game();
 
         String initialFEN = request != null && request.getInitialFEN() != null && !request.getInitialFEN().isBlank()

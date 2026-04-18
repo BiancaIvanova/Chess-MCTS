@@ -8,6 +8,7 @@ import project.chess.persistence.entity.GameEntity;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -172,6 +173,25 @@ public class GameRepository
 
                     return game;
                 }
+        );
+    }
+
+    public void abandonOngoingGames(LocalDateTime endedAt)
+    {
+        String sql = """
+            UPDATE games
+            SET end_time_utc = ?,
+                result = ?,
+                completed = ?
+            WHERE result = ?
+            """;
+
+        jdbcTemplate.update(
+                sql,
+                endedAt,
+                "ABANDONED",
+                true,
+                "ONGOING"
         );
     }
 }

@@ -94,6 +94,62 @@ public class Game
     }
 
     /**
+     * Attempts to make a legal move in SAN notation without enforcing turn order.
+     * This method is intended for analysis mode, where either side may make moves
+     * regardless of whose turn it would normally be.
+     *
+     * @param sanMove The move in SAN notation.
+     * @return true if the move was legal and made, false otherwise.
+     */
+    public boolean makeValidMoveNoEnforceTurn(String sanMove)
+    {
+        if (gameOver)
+        {
+            return false;
+        }
+
+        Piece.Colour[] colours =
+                {
+                        Piece.Colour.WHITE,
+                        Piece.Colour.BLACK
+                };
+
+        for (Piece.Colour colour : colours)
+        {
+            List<Pair<String, Chessboard>> legalMoves =
+                    board.generateAllLegalMoveBoards(colour);
+
+            for (Pair<String, Chessboard> move : legalMoves)
+            {
+                String legalSAN = move.getKey();
+
+                if (legalSAN.equals(sanMove))
+                {
+                    board = move.getValue();
+
+                    moveHistorySAN.add(sanMove);
+
+                    currentTurn = colour;
+
+                    updateHalfMoveClock(sanMove);
+
+                    if (currentTurn == Piece.Colour.BLACK)
+                    {
+                        fullMoveNumber++;
+                    }
+
+                    updateGameStatus();
+                    switchTurn();
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Makes a move without validation. Assumes the move is valid.
      * @param move A {@link Pair} containing SAN notation and resulting {@link Chessboard}.
      */
